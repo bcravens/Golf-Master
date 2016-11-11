@@ -1,0 +1,14 @@
+<h1>All Groups</h1>
+
+<%= puts @groups %>
+
+<div>
+  <% @groups.each do |group| %>
+    <div>
+      <h2><%= link_to group.name, group %></h2>
+        <ul>
+          <li>Number of Players: <%= group.num_players %></li>
+        </ul>
+    </div>
+  <% end %>
+</div>

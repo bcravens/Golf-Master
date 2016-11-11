@@ -1,0 +1,19 @@
+<h2>Group For: <%= @group.name %></h2>
+<h3><%= link_to("Edit This Group", edit_group_path(@group)) if @current_user %></h3>
+
+<h1>Group Information</h1>
+  <div id="group">
+    <div class="group_info">
+      <h3>Members</h3>
+      <% @group.users.each do |user| %>
+        <p><%= user.name %></p>
+      <% end %>
+    </div>
+    <div class="group_info">
+      <h3>Upcoming Bets at <%= @group.holes.first.course.name %> Golf Course:</h3>
+      <% @group.bets.each do |bet| %>
+      <p>Hole: <%= bet.hole.hole_num %></p>
+      <p>Amount: $<%= bet.amount %></p>
+      <% end %>
+    </div>
+  </div>

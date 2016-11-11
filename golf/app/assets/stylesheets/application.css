@@ -4,6 +4,9 @@
    margin: 10px;
    float: right;
  }
+ #login > a{
+   padding: 5px;
+ }
   #navigations {
     font-family: 'Fjalla One', sans-serif;
     font-size: 1.4em;
@@ -109,6 +112,21 @@
    width: 800px;
    height: 300px;
    border: 1px solid black;
+ }
+
+ /* Groups */
+ #group {
+   width: 100%;
+   height: 100%;
+   display: flex;
+   flex-direction: column;
+   flex-wrap: wrap;
+ }
+ .group_info {
+   border: 1px solid black;
+   margin: 20px;
+   width: 25%;
+   padding: 10px;
  }
 
  /* Forms */

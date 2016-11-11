@@ -1,7 +1,7 @@
 <h1>All Courses</h1>
 
-<div class="courses">
-  <% @courses.each do |course| %>
+<div id="courses">
+  <% @courses.sort_by{|course| course.name.downcase}.each do |course| %>
     <div class="course">
       <h2><%= link_to course.name, course %></h2>
         <img class= "course_img" src="<%= course.img_url %>" alt="">

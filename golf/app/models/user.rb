@@ -1,4 +1,4 @@
 class User < ApplicationRecord
-  has_many :artists
-  has_many :songs
+  belongs_to :group
+  has_many :bets, through: :group
 end

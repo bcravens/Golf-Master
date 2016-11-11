@@ -10,10 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161109140459) do
+ActiveRecord::Schema.define(version: 20161112150340) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "bets", force: :cascade do |t|
+    t.integer  "amount"
+    t.integer  "hole_id"
+    t.integer  "group_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["group_id"], name: "index_bets_on_group_id", using: :btree
+    t.index ["hole_id"], name: "index_bets_on_hole_id", using: :btree
+  end
 
   create_table "courses", force: :cascade do |t|
     t.string   "img_url"
@@ -25,6 +35,12 @@ ActiveRecord::Schema.define(version: 20161109140459) do
     t.integer  "rating"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "groups", force: :cascade do |t|
+    t.integer  "num_players"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
   end
 
   create_table "holes", force: :cascade do |t|
@@ -39,9 +55,16 @@ ActiveRecord::Schema.define(version: 20161109140459) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string "username"
-    t.string "password"
+    t.string  "name"
+    t.string  "email"
+    t.string  "username"
+    t.string  "password"
+    t.integer "group_id"
+    t.index ["group_id"], name: "index_users_on_group_id", using: :btree
   end
 
+  add_foreign_key "bets", "groups"
+  add_foreign_key "bets", "holes"
   add_foreign_key "holes", "courses"
+  add_foreign_key "users", "groups"
 end

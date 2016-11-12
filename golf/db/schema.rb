@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161112150340) do
+ActiveRecord::Schema.define(version: 20161112160924) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -39,7 +39,7 @@ ActiveRecord::Schema.define(version: 20161112150340) do
 
   create_table "groups", force: :cascade do |t|
     t.string   "name"
-    t.integer  "num_players"
+    t.integer  "num_members"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
   end
@@ -55,17 +55,25 @@ ActiveRecord::Schema.define(version: 20161112150340) do
     t.index ["course_id"], name: "index_holes_on_course_id", using: :btree
   end
 
+  create_table "memberships", force: :cascade do |t|
+    t.integer  "group_id"
+    t.integer  "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["group_id"], name: "index_memberships_on_group_id", using: :btree
+    t.index ["user_id"], name: "index_memberships_on_user_id", using: :btree
+  end
+
   create_table "users", force: :cascade do |t|
-    t.string  "name"
-    t.string  "email"
-    t.string  "username"
-    t.string  "password"
-    t.integer "group_id"
-    t.index ["group_id"], name: "index_users_on_group_id", using: :btree
+    t.string "name"
+    t.string "email"
+    t.string "username"
+    t.string "password"
   end
 
   add_foreign_key "bets", "groups"
   add_foreign_key "bets", "holes"
   add_foreign_key "holes", "courses"
-  add_foreign_key "users", "groups"
+  add_foreign_key "memberships", "groups"
+  add_foreign_key "memberships", "users"
 end

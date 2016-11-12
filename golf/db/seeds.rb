@@ -13,6 +13,7 @@ Hole.destroy_all
 Group.destroy_all
 User.destroy_all
 Bet.destroy_all
+Membership.destroy_all
 
 hole_data = get_hole_data()
 course_data = get_course_data()
@@ -51,17 +52,24 @@ holesix = Hole.create(img_url: "none", hole_num:6, par:3, yardage:218, course: s
 holeseven = Hole.create(img_url: "none", hole_num:7, par:3, yardage:218, course: sky)
 
 
-friends = Group.create(name: "Bradley and Friends", num_players: 3)
-other_group = Group.create(name: "Other Group", num_players: 3)
+friends = Group.create(name: "Bradley and Friends", num_members: 3)
+other_group = Group.create(name: "Other Group", num_members: 3)
 
-bradley = User.create(name:"bradley", email:"bradley@gmail.com", username:"bcravens", group: friends)
-jolie = User.create(name:"jolie", email:"jolie@gmail.com", username:"jrosenthal", group: friends)
-ethan = User.create(name:"ethan", email:"ethan@gmail.com", username:"ethanc", group: friends)
+bradley = User.create(name:"bradley", email:"bradley@gmail.com", username:"bcravens", password: "tommy")
+jolie = User.create(name:"jolie", email:"jolie@gmail.com", username:"jrosenthal")
+ethan = User.create(name:"ethan", email:"ethan@gmail.com", username:"ethanc")
 
+bradleymem = Membership.create(user: bradley, group: friends)
+joliemem = Membership.create(user: jolie, group: friends)
+ethanmem = Membership.create(user: ethan, group: friends)
 
-rob = User.create(name:"rob", email:"rob@gmail.com", username:"rob", group: other_group)
-joe = User.create(name:"joe", email:"joe@gmail.com", username:"joe", group: other_group)
-paul = User.create(name:"paul", email:"paul@gmail.com", username:"paul", group: other_group)
+rob = User.create(name:"rob", email:"rob@gmail.com", username:"rob")
+joe = User.create(name:"joe", email:"joe@gmail.com", username:"joe")
+paul = User.create(name:"paul", email:"paul@gmail.com", username:"paul")
+
+robmem = Membership.create(user: rob, group: other_group)
+joemem = Membership.create(user: joe, group: other_group)
+paulmem = Membership.create(user: paul, group: other_group)
 
 money = Bet.create(amount: 5, hole: holeone, group: friends)
 money = Bet.create(amount: 25, hole: holetwo, group: friends)

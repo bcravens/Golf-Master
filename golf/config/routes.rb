@@ -4,9 +4,12 @@ Rails.application.routes.draw do
     resources :holes
   end
 
+  resources :groups do
+    resources :memberships
+  end
+
   resources :holes
   resources :bets
-  resources :groups
   resources :users
   resource :session
 

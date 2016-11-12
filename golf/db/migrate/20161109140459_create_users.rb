@@ -5,7 +5,6 @@ class CreateUsers < ActiveRecord::Migration[5.0]
       t.string :email
       t.string :username
       t.string :password
-      t.references :group, index: true, foreign_key: true
     end
   end
 end

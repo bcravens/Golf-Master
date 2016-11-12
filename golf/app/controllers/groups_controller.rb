@@ -16,6 +16,7 @@ class GroupsController < ApplicationController
   def create
     redirect_to root_path unless @current_user
     @group = Group.create!(group_params)
+    @group.users.push(@current_user)
     redirect_to @group
   end
 
@@ -42,5 +43,6 @@ class GroupsController < ApplicationController
   def group_params
     params.require(:group).permit(:name, :num_players)
   end
+
 
 end

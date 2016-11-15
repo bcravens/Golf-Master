@@ -8,9 +8,13 @@ Rails.application.routes.draw do
     resources :memberships
   end
 
+  resources :users do
+    resources :memberships
+  end
+
   resources :holes
   resources :bets
-  resources :users
   resource :session
+  resources :events
 
   end

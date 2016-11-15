@@ -20,13 +20,19 @@ class UsersController < ApplicationController
 
   def edit
     @user = User.find(params[:id])
-    redirect_to root_url unless @current_user == @user
   end
 
   def update
     @user = User.find(params[:id])
     @user.update(user_params)
     redirect_to users_path(@user)
+  end
+
+  def destroy
+    redirect_to root_path unless @current_user
+    @user = User.find(params[:id])
+    @user.destroy
+    redirect_to @user
   end
 
   private

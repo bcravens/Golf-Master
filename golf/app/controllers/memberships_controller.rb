@@ -1,18 +1,17 @@
 class MembershipsController < ApplicationController
 
   def index
-    @memberships = Membership.all
+    @memberships = @current_user.memberships.all
   end
 
   def new
     @group = Group.find(params[:group_id])
-    @membership = Membership.create(user_id: @current_user.id, group_id: @group.id)
-    redirect_to @group
-  end
-
-  def create
-    @group = Group.find(params[:id])
-    @membership = Membership.create!(membership_params)
+    if Membership.exists?(user_id: @current_user.id, group_id: @group.id)
+      flash[:alert] = "You are already in this group!"
+    else
+      @membership = Membership.create(user_id: @current_user.id, group_id: @group.id)
+      flash[:notice] = "You have joined this group"
+    end
     redirect_to @group
   end
 

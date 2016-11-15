@@ -8,3 +8,5 @@
 
   <%= f.submit "Submit" %>
 <% end %>
+
+<%= link_to("Delete", @user, method: :delete, class: "delete") if @current_user %>

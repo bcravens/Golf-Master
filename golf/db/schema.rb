@@ -16,11 +16,13 @@ ActiveRecord::Schema.define(version: 20161112160924) do
   enable_extension "plpgsql"
 
   create_table "bets", force: :cascade do |t|
-    t.integer  "amount"
-    t.integer  "hole_id"
-    t.integer  "group_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.integer "amount"
+    t.integer "hole_id"
+    t.integer "course_id"
+    t.integer "group_id"
+    t.integer "event_id"
+    t.index ["course_id"], name: "index_bets_on_course_id", using: :btree
+    t.index ["event_id"], name: "index_bets_on_event_id", using: :btree
     t.index ["group_id"], name: "index_bets_on_group_id", using: :btree
     t.index ["hole_id"], name: "index_bets_on_hole_id", using: :btree
   end
@@ -35,6 +37,17 @@ ActiveRecord::Schema.define(version: 20161112160924) do
     t.integer  "rating"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "events", force: :cascade do |t|
+    t.string   "name"
+    t.datetime "time"
+    t.integer  "course_id"
+    t.integer  "group_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["course_id"], name: "index_events_on_course_id", using: :btree
+    t.index ["group_id"], name: "index_events_on_group_id", using: :btree
   end
 
   create_table "groups", force: :cascade do |t|
@@ -71,8 +84,12 @@ ActiveRecord::Schema.define(version: 20161112160924) do
     t.string "password"
   end
 
+  add_foreign_key "bets", "courses"
+  add_foreign_key "bets", "events"
   add_foreign_key "bets", "groups"
   add_foreign_key "bets", "holes"
+  add_foreign_key "events", "courses"
+  add_foreign_key "events", "groups"
   add_foreign_key "holes", "courses"
   add_foreign_key "memberships", "groups"
   add_foreign_key "memberships", "users"

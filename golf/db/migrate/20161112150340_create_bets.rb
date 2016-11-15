@@ -3,8 +3,9 @@ class CreateBets < ActiveRecord::Migration[5.0]
     create_table :bets do |t|
       t.integer :amount
       t.references :hole, index: true, foreign_key: true
+      t.references :course, index: true, foreign_key: true
       t.references :group, index: true, foreign_key: true
-      t.timestamps null: false
+      t.references :event, index: true, foreign_key: true
     end
   end
 end

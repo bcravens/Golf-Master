@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Golf Masters</title>
+    <title>Golf Master</title>
     <%= csrf_meta_tags %>
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
@@ -13,32 +13,34 @@
   <body>
     <nav id="login">
       <% if @current_user %>
-        <%= link_to "WELCOME, #{@current_user.username}!", user_path(@current_user) %>
+        <%= "WELCOME #{@current_user.name.upcase}!"%>
+        <%= link_to "PROFLIE", user_path(@current_user) %>
+        <%= link_to "YOUR GROUPS", "/users/#{@current_user.id}/memberships" %>
+        <%= link_to "YOUR EVENTS", "/users/#{@current_user.id}/memberships" %>
+        <%= link_to "YOUR BETS", "/users/#{@current_user.id}/memberships" %>
+        <%= link_to "YOUR WINNINGS", "/users/#{@current_user.id}/memberships" %>
         <%= link_to "USERS", users_path %>
-        <%= link_to "GROUPS", groups_path %>
         <%= link_to "SIGN OUT", session_path, method: :delete %>
       <% else %>
         <%= link_to "LOGIN", new_session_path %>
         <%= link_to "SIGN UP", new_user_path %>
-        <%= link_to "USERS", users_path %>
       <% end %>
     </nav>
     <div id="header">
       <div id= "header_info">
         <%= image_tag("flag.png", :alt => "flag") %>
         <h2>Golf Master</h2>
-        <h3>Look up Courses</h3>
-        <h3>Enter your own Course</h3>
-        <h3>Update Courses</h3>
-        <h3>Bet with friends on holes</h3>
-        <h3>Track your winnings</h3>
+        <h3>Look up Course Information</h3>
+        <h3>Create, Edit & Update Courses</h3>
+        <h3>Make Groups to Golf with</h3>
+        <h3>Organize Events</h3>
+        <h3>Bet on holes</h3>
       </div>
     </div>
 
   <nav id="navigations">
     <%= link_to "HOME", new_course_path %>
     <%= link_to "COURSES", courses_path %>
-    <% if @current_user %>
     <%= link_to "ADD A COURSE", new_course_path %>
     <div id="dropdown">
       <%= link_to "EDIT A COURSE", new_course_path %>
@@ -48,9 +50,10 @@
           <% end %>
         </div>
     </div>
-    <%= link_to "BET GOLF", new_course_path %>
+    <%= link_to "GROUPS", groups_path %>
+    <%= link_to "EVENTS", events_path %>
+    <%= link_to "BETS", new_course_path %>
     <%= link_to "WINNINGS", new_course_path %>
-    <% end %>
   </nav>
 
   <% flash.each do |type, message| %>

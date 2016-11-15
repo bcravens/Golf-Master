@@ -1,21 +1,20 @@
-<h2>Group For: <%= @group.name %></h2>
-<h3><%= link_to "All Groups", groups_path %> | <%= link_to "Join this group", new_group_membership_path(@group) if @current_user %> | <%= link_to("Edit Group", edit_group_path(@group)) if @current_user %></h3>
+<h1><%= @group.name %></h1>
+<p><%= link_to "All Groups", groups_path %> | <%= link_to "Join this group", new_group_membership_path(@group) if @current_user %> | <%= link_to("Edit Group", edit_group_path(@group)) if @current_user %></p>
 
-
-<h1>Group Information</h1>
-  <div id="group">
-    <div class="group_info">
-      <h3>Members</h3>
+<h2>Group Information</h2>
+  <div id="group_show">
+    <h3>Members:</h3>
+    <div id="group_members">
       <% @group.memberships.each do |member| %>
-        <p><%= member.user.name %></p>
+        <p><%= link_to member.user.name, "/users/#{member.user_id}" %></p>
       <% end %>
     </div>
     <% if @group.bets.first %>
-      <div class="group_info">
-        <h3>Upcoming Bets at <%= @group.holes.first.course.name %> Golf Course:</h3>
+    <h3>Upcoming Bets at <%= link_to "#{@group.holes.first.course.name} Golf Course:", "/courses/#{@group.holes.first.course.id}" %></h3>
+      <div id="group_bets">
         <% @group.bets.each do |bet| %>
-        <p>Hole: <%= bet.hole.hole_num %></p>
-        <p>Amount: $<%= bet.amount %></p>
+        <p><%= link_to "Hole:#{bet.hole.hole_num}", "/courses/#{@group.holes.first.course.id}/holes/#{bet.hole.id}" %></p>
+        <p>$<%= bet.amount %></p>
         <% end %>
       </div>
     <% else %>

@@ -1,9 +1,9 @@
 <h1>All Groups</h1>
 <h3><%= link_to "Create your own Group", new_group_path if @current_user %></h3>
 
-<div>
+<div class="groups">
   <% @groups.each do |group| %>
-    <div class= "group_info">
+    <div class= "group">
       <h2><%= link_to group.name, group %></h2>
         <ul>
           <li>Number of Players: <%= group.num_members %></li>

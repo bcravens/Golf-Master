@@ -1,1 +1,12 @@
-d
+<h1>All <%= @current_user.name %>'s Groups </h1>
+<h3><%= link_to "Find a Group", groups_path if @current_user %></h3>
+<h3><%= link_to "Create your own Group", new_group_path if @current_user %></h3>
+
+<div class="groups">
+  <% @memberships.each do |membership| %>
+    <div class= "group">
+      <p>Name: <%= link_to membership.group.name, "/groups/#{membership.group.id}" %></p>
+      <p>Number of Members: <%= membership.group.num_members %></p>
+    </div>
+  <% end %>
+</div>

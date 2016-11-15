@@ -4,7 +4,7 @@
    margin: 10px;
    float: right;
  }
- #login > a{
+ #login > a {
    padding: 5px;
  }
   #navigations {
@@ -44,7 +44,7 @@
    width: 100%;
    height: 500px;
    display: flex;
-   background-image: url("https://www.pebblebeach.com/content/uploads/Hole-7-Credit-Bart-Keagy.jpg");
+   background-image: url("http://dbijapkm3o6fj.cloudfront.net/resources/13461,4,1,6,4,0/-4397-/20140923124044/4.-a-modern-marvel-of-golf-awaits.jpeg");
    background-position: center;
    border: 1px solid black;
  }
@@ -80,7 +80,7 @@
    text-decoration: none;
  }
  a:hover {
-   background-color: #ccc;
+   border-bottom: 1px solid;
  }
 
  /* Courses */
@@ -97,6 +97,8 @@
    height: 300px;
    min-width: 50em;
    border: 1px solid black;
+   background-size: cover;
+   background-position: center;
  }
 
  /* Holes */
@@ -115,19 +117,87 @@
  }
 
  /* Groups */
- #group {
+ .groups {
    width: 100%;
    height: 100%;
    display: flex;
-   flex-direction: column;
    flex-wrap: wrap;
  }
- .group_info {
+ .group {
    border: 1px solid black;
    margin: 20px;
    width: 25%;
    padding: 10px;
  }
+ #group_show {
+   width: 40%;
+   height: 100%;
+ }
+ #group_members {
+  border: 1px solid black;
+  margin: 20px;
+  padding: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  height: 100px;
+ }
+ #group_members > p, #group_members > p{
+   margin: 8px;
+ }
+ #group_bets {
+  height: 400px;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  border: 1px solid black;
+  margin: 20px;
+  padding: 20px;
+ }
+
+ /* Events */
+#events {
+  display: flex;
+  flex-wrap: wrap;
+}
+.event {
+  border: 1px solid rgb(171, 183, 205);
+  display: flex;
+  flex-direction: column;
+  width: 500px;
+  margin: 15px;
+}
+.event-group-row {
+  background-color: rgb(53, 56, 61);
+  padding-left: 5px;
+  color: rgb(220, 222, 226);
+}
+.event-group-row > p > a, .event-group-row > h2 > a {
+  color: rgb(220, 222, 226);
+}
+.event-titles {
+  display: flex;
+  background-color: rgb(235, 239, 245);
+}
+.event-details > h3 {
+  padding: 5px;
+  margin: 1px;
+}
+.event-titles2 {
+  display: flex;
+  background-color: white;
+}
+.event-details {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding-left: 5px;
+  border: 1px solid rgb(171, 183, 205);
+}
+.course-col {
+  width: 800px;
+}
+
 
  /* Forms */
   input {
@@ -154,10 +224,14 @@
 /* Flash */
  .alert{
     color:#f00;
+    margin-left: 10px;
+
  }
  .notice{
     color:#00f;
+    margin-left: 10px;
  }
+
 
 /* Footer */
 footer {

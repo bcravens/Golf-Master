@@ -1,0 +1,64 @@
+<h1>Upcoming Event</h1>
+
+<div id="events">
+    <div class="event">
+      <div class="event-group-row">
+        <h2><%= @event.name %></h2>
+        <p><%= link_to @event.group.name, "/groups/#{@event.group.id}" %></p>
+      </div>
+      <div class="event-titles">
+        <div class="event-details">
+          <h3> Start </h3>
+        </div>
+        <div class="event-details course-col">
+          <h3> Course </h3>
+        </div>
+        <div class="event-details">
+          <h3> Bets </h3>
+        </div>
+      </div>
+      <div class="event-titles2">
+        <div class="event-details">
+          <p> 1:45 </p>
+        </div>
+        <div class="event-details course-col">
+          <p> <%= link_to @event.course.name, "/courses/#{@event.course.id}"%></p>
+        </div>
+        <div class="event-details">
+          <p> <%= @event.bets.count %> </p>
+        </div>
+      </div>
+    </div>
+</div>
+
+<div id="events">
+    <div class="event">
+      <div class="event-group-row">
+        <h2>Scheduled Bets</h2>
+      </div>
+      <div class="event-titles">
+        <div class="event-details">
+          <h3> Hole </h3>
+        </div>
+        <div class="event-details course-col">
+          <h3> Amount </h3>
+        </div>
+        <div class="event-details">
+          <h3> Winner </h3>
+        </div>
+      </div>
+      <% @event.bets.each do |bet| %>
+      <div class="event-titles2">
+        <div class="event-details">
+          <p> <%= bet.hole.hole_num %> </p>
+        </div>
+        <div class="event-details course-col">
+          <p> $<%= bet.amount %></p>
+        </div>
+        <div class="event-details">
+          <p> TBD </p>
+        </div>
+      </div>
+      <% end %>
+    </div>
+</div>

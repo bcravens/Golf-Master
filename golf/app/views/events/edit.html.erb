@@ -1,0 +1,14 @@
+<h2>Edit: <%= link_to @event.name, @group %></h2>
+
+<%= form_for @event do |f| %>
+  <%= f.label :name %>
+  <%= f.text_field :name %>
+
+  <%= f.label :date %>
+  <%= f.datetime_select :time, {ampm: true} %>
+<br/><br/>
+  <%= f.label :course %>
+  <%= f.select :course_id, @course %>
+<br/><br/>
+  <%= f.submit %>
+<% end %>

@@ -19,11 +19,9 @@ ActiveRecord::Schema.define(version: 20161112160924) do
     t.integer "amount"
     t.integer "hole_id"
     t.integer "course_id"
-    t.integer "group_id"
     t.integer "event_id"
     t.index ["course_id"], name: "index_bets_on_course_id", using: :btree
     t.index ["event_id"], name: "index_bets_on_event_id", using: :btree
-    t.index ["group_id"], name: "index_bets_on_group_id", using: :btree
     t.index ["hole_id"], name: "index_bets_on_hole_id", using: :btree
   end
 
@@ -86,7 +84,6 @@ ActiveRecord::Schema.define(version: 20161112160924) do
 
   add_foreign_key "bets", "courses"
   add_foreign_key "bets", "events"
-  add_foreign_key "bets", "groups"
   add_foreign_key "bets", "holes"
   add_foreign_key "events", "courses"
   add_foreign_key "events", "groups"

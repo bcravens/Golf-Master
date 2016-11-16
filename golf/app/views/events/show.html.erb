@@ -1,4 +1,5 @@
 <h1>Upcoming Event</h1>
+<p><%= link_to "All Events", events_path %> | <%= link_to "Add Bets", new_event_bet_path(@event) %> | <%= link_to "Attend Event by Joining this Group", "/groups/#{@event.group.id}" %> | <%= link_to "Edit Event", edit_event_path(@event) %>
 
 <div id="events">
     <div class="event">
@@ -47,7 +48,7 @@
           <h3> Winner </h3>
         </div>
       </div>
-      <% @event.bets.each do |bet| %>
+      <% @event.bets.sort_by(&:hole_id).each do |bet| %>
       <div class="event-titles2">
         <div class="event-details">
           <p> <%= bet.hole.hole_num %> </p>

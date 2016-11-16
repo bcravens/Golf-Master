@@ -4,7 +4,6 @@ class CreateBets < ActiveRecord::Migration[5.0]
       t.integer :amount
       t.references :hole, index: true, foreign_key: true
       t.references :course, index: true, foreign_key: true
-      t.references :group, index: true, foreign_key: true
       t.references :event, index: true, foreign_key: true
     end
   end

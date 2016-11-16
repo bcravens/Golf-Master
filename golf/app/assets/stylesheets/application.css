@@ -183,6 +183,9 @@
   padding: 5px;
   margin: 1px;
 }
+#time {
+  font-size: 16px;
+}
 .event-titles2 {
   display: flex;
   background-color: white;

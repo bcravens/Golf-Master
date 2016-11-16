@@ -1,7 +1,6 @@
 <h1><%= @group.name %></h1>
 <p><%= link_to "All Groups", groups_path %> | <%= link_to "Join this group", new_group_membership_path(@group) if @current_user %> | <%= link_to("Edit Group", edit_group_path(@group)) if @current_user %></p>
 
-<h2>Group Information</h2>
   <div id="group_show">
     <h3>Members:</h3>
     <div id="group_members">
@@ -9,17 +8,43 @@
         <p><%= link_to member.user.name, "/users/#{member.user_id}" %></p>
       <% end %>
     </div>
-    <% if @group.bets.first %>
-    <h3>Upcoming Bets at <%= link_to "#{@group.holes.first.course.name} Golf Course:", "/courses/#{@group.holes.first.course.id}" %></h3>
-      <div id="group_bets">
-        <% @group.bets.each do |bet| %>
-        <p><%= link_to "Hole:#{bet.hole.hole_num}", "/courses/#{@group.holes.first.course.id}/holes/#{bet.hole.id}" %></p>
-        <p>$<%= bet.amount %></p>
-        <% end %>
-      </div>
-    <% else %>
-      <div class="group_info">
-        <h3>No Upcoming Bets</h3>
+  </div>
+
+<h3>Upcoming Events:</h3>
+<%= link_to "Add Event for this Group", new_group_event_path(@group) %>
+<% if @group.events %>
+  <div id="events">
+    <% @group.events.each do |event| %>
+      <div class="event">
+        <div class="event-group-row">
+          <h2><%= link_to event.name, event %></h2>
+          <p><%= link_to event.group.name, "/groups/#{event.group.id}" %></p>
+        </div>
+        <div class="event-titles">
+          <div class="event-details">
+            <h3> Start </h3>
+          </div>
+          <div class="event-details course-col">
+            <h3> Course </h3>
+          </div>
+          <div class="event-details">
+            <h3> Bets </h3>
+          </div>
+        </div>
+        <div class="event-titles2">
+          <div class="event-details">
+            <p> 1:45 </p>
+          </div>
+          <div class="event-details course-col">
+            <p> <%= link_to event.course.name, "/courses/#{event.course.id}"%></p>
+          </div>
+          <div class="event-details">
+            <p> <%= event.bets.count %> </p>
+          </div>
+        </div>
       </div>
     <% end %>
   </div>
+<% else %>
+    <h3>No Upcoming Events</h3>
+<% end %>

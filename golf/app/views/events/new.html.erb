@@ -1,32 +1,14 @@
-<h1>Upcoming Event</h1>
+<h2>New Event for <%= link_to @group.name, @group %></h2>
 
-<div id="events">
-    <div class="event">
-      <div class="event-group-row">
-        <h2><%= @event.name %></h2>
-        <p><%= link_to @event.group.name, "/groups/#{@event.group.id}" %></p>
-      </div>
-      <div class="event-titles">
-        <div class="event-details">
-          <h3> Start </h3>
-        </div>
-        <div class="event-details course-col">
-          <h3> Course </h3>
-        </div>
-        <div class="event-details">
-          <h3> Bets </h3>
-        </div>
-      </div>
-      <div class="event-titles2">
-        <div class="event-details">
-          <p> 1:45 </p>
-        </div>
-        <div class="event-details course-col">
-          <p> <%= link_to @event.course.name, "/courses/#{@event.course.id}"%></p>
-        </div>
-        <div class="event-details">
-          <p> <%= @event.bets.count %> </p>
-        </div>
-      </div>
-    </div>
-</div>
+<%= form_for [@group, @event] do |f| %>
+  <%= f.label :name %>
+  <%= f.text_field :name %>
+
+  <%= f.label :date %>
+  <%= f.datetime_select :time, {ampm: true} %>
+  <br/><br/>
+  <%= f.label :course %>
+  <%= f.select :course_id, @course %>
+  <br/><br/>
+  <%= f.submit %>
+<% end %>

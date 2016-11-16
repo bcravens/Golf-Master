@@ -10,13 +10,16 @@ class BetsController < ApplicationController
 
   def new
     redirect_to root_path unless @current_user
-    @bet = Bet.new
+    @event = Event.find(params[:event_id])
+    @hole = @event.course.holes.all.map{|h| [h.hole_num, h.id]}
+    @bet = @event.bets.new
   end
 
   def create
     redirect_to root_path unless @current_user
-    @bet = Bet.create!(bet_params)
-    redirect_to @bet
+    @event = Event.find(params[:event_id])
+    @bets = @event.bets.create!(bet_params)
+    redirect_to @event
   end
 
   def edit
@@ -40,7 +43,7 @@ class BetsController < ApplicationController
 
   private
   def bet_params
-    params.require(:bet).permit(:amount, :hole_id, :group_id)
+    params.require(:bet).permit(:amount, :hole_id, :course_id, :event_id)
   end
 
 end

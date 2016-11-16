@@ -1,0 +1,34 @@
+<h2>New Bets for <%= link_to @event.name, @event %></h2>
+
+<%= form_for [@event, @bet] do |f| %>
+
+  <%= f.hidden_field :course_id, :value => @event.course.id %>
+
+  <%= f.label :hole %>
+  <%= f.select :hole_id, @hole %>
+  <br/><br/>
+  <%= f.label :amount %>
+  <%= f.text_field :amount %>
+
+  <%= f.submit %>
+<% end %>
+
+
+
+<input name="hole<%= hold.id %>bet" type="text">
+
+params = {
+  hole1: "5",
+  hole2: "6",
+  hole5: "5",
+
+}
+params.keys
+
+# routes.
+post '/course/:course_id/create_bets' => controller#action
+
+def CreateBets
+  # iterate through params
+    # create a bet via params of course id, and also hole id  and bet amount
+end

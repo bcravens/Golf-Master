@@ -15,3 +15,5 @@
 
 ### PLAT
 * As a user I want to be able to create multiple bets at once.
+
+![ERD Model](/desktop/erd.pdf?raw=true "ERD Model")

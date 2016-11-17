@@ -12,23 +12,3 @@
 
   <%= f.submit %>
 <% end %>
-
-
-
-<input name="hole<%= hold.id %>bet" type="text">
-
-params = {
-  hole1: "5",
-  hole2: "6",
-  hole5: "5",
-
-}
-params.keys
-
-# routes.
-post '/course/:course_id/create_bets' => controller#action
-
-def CreateBets
-  # iterate through params
-    # create a bet via params of course id, and also hole id  and bet amount
-end

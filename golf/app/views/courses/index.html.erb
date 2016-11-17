@@ -3,14 +3,7 @@
 <div id="courses">
   <% @courses.sort_by{|course| course.name.downcase}.each do |course| %>
     <div class="course">
-      <h2><%= link_to course.name, course %></h2>
-        <div class= "course_img" style="background-image: url('<%= course.img_url %>');" ></div>
-        <ul>
-          <li>Number of Holes: <%= course.num_holes %></li>
-          <li>Par: <%= course.par %></li>
-          <li>Yardage: <%= course.yardage %></li></li>
-          <li>Rating: <%= course.rating %></li>
-        </ul>
+        <div class= "course_img" style="background-image: url('<%= course.img_url %>');" ><%= link_to course.name, course %></div>
     </div>
   <% end %>
 </div>

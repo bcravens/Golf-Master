@@ -1,5 +1,5 @@
 <h1><%= @group.name %></h1>
-<p><%= link_to "All Groups", groups_path %> | <%= link_to "Join this group", new_group_membership_path(@group) if @current_user %> | <%= link_to("Edit Group", edit_group_path(@group)) if @current_user %></p>
+<p><%= link_to "All Groups", groups_path %> | <%= link_to "Join this group", new_group_membership_path(@group) %> | <%= link_to("Edit Group", edit_group_path(@group)) %></p>
 
   <div id="group_show">
     <h3>Members:</h3>

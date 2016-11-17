@@ -3,6 +3,42 @@
 <h3><%= @course.location %></h3>
 <%= image_tag @course.img_url, class: "course_img" %>
 
+<div id="events">
+    <div class="event">
+      <div class="event-group-row">
+        <h2>Course Information</h2>
+      </div>
+      <div class="event-titles">
+        <div class="event-details">
+          <h3> Holes </h3>
+        </div>
+        <div class="event-details">
+          <h3> Par </h3>
+        </div>
+        <div class="event-details">
+          <h3> Yardage </h3>
+        </div>
+        <div class="event-details">
+          <h3> Rating </h3>
+        </div>
+      </div>
+      <div class="event-titles2">
+        <div class="event-details">
+          <p><%= @course.holes.count %></p>
+        </div>
+        <div class="event-details">
+          <p>  <%= @course.par %></p>
+        </div>
+        <div class="event-details">
+          <p> <%= @course.yardage %> </p>
+        </div>
+        <div class="event-details">
+          <p> <%= @course.rating %> </p>
+        </div>
+      </div>
+    </div>
+</div>
+
 <h1>Hole Information</h1>
 
 <div class="holes">

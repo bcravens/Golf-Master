@@ -20,7 +20,7 @@
       </div>
       <div class="event-titles2">
         <div class="event-details">
-          <p> 1:45 </p>
+          <p id="time"> <%= @event.time.strftime("%m/%d/%y %I:%M %p") unless @event.time.nil?%> </p>
         </div>
         <div class="event-details course-col">
           <p> <%= link_to @event.course.name, "/courses/#{@event.course.id}"%></p>

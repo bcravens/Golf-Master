@@ -5,6 +5,7 @@ class CreateBets < ActiveRecord::Migration[5.0]
       t.references :hole, index: true, foreign_key: true
       t.references :course, index: true, foreign_key: true
       t.references :event, index: true, foreign_key: true
+      t.references :user, index: true, foreign_key: true
     end
   end
 end

@@ -1,0 +1,14 @@
+<h2>Edit Bet for <%= link_to @event.name, @event %></h2>
+
+<%= form_for [@event, @bet] do |f| %>
+
+  <%= f.hidden_field :course_id, :value => @event.course.id %>
+  <%= f.hidden_field :hole_id, :value => @bet.hole.id %>
+
+  <br/><br/>
+
+  <%= f.label :amount %>
+  <%= f.text_field :amount %>
+
+  <%= f.submit %>
+<% end %>

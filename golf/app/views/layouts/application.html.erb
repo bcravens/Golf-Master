@@ -16,9 +16,6 @@
         <%= "WELCOME #{@current_user.name.upcase}!"%>
         <%= link_to "PROFLIE", user_path(@current_user) %>
         <%= link_to "YOUR GROUPS", "/users/#{@current_user.id}/memberships" %>
-        <%= link_to "YOUR EVENTS", "/users/#{@current_user.id}/memberships" %>
-        <%= link_to "YOUR BETS", "/users/#{@current_user.id}/memberships" %>
-        <%= link_to "YOUR WINNINGS", "/users/#{@current_user.id}/memberships" %>
         <%= link_to "USERS", users_path %>
         <%= link_to "SIGN OUT", session_path, method: :delete %>
       <% else %>
@@ -39,8 +36,10 @@
     </div>
 
   <nav id="navigations">
-    <%= link_to "HOME", new_course_path %>
+    <%= link_to "HOME", courses_path %>
     <%= link_to "COURSES", courses_path %>
+    <%= link_to "EVENTS", events_path %>
+    <%= link_to "GROUPS", groups_path %>
     <%= link_to "ADD A COURSE", new_course_path %>
     <div id="dropdown">
       <%= link_to "EDIT A COURSE", new_course_path %>
@@ -50,9 +49,6 @@
           <% end %>
         </div>
     </div>
-    <%= link_to "GROUPS", groups_path %>
-    <%= link_to "EVENTS", events_path %>
-    <%= link_to "WINNINGS", new_course_path %>
   </nav>
 
   <% flash.each do |type, message| %>

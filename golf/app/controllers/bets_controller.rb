@@ -24,14 +24,16 @@ class BetsController < ApplicationController
 
   def edit
     redirect_to root_path unless @current_user
+    @event = Event.find(params[:event_id])
     @bet = Bet.find(params[:id])
   end
 
   def update
     redirect_to root_path unless @current_user
+    @event = Event.find(params[:event_id])
     @bet = Bet.find(params[:id])
     @bet.update(bet_params)
-    redirect_to @bet
+    redirect_to @event
   end
 
   def destroy

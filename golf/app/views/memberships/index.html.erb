@@ -1,12 +1,27 @@
-<h1>All <%= @current_user.name %>'s Groups </h1>
+<h1>Groups For <%= @current_user.name %></h1>
 <h3><%= link_to "Find a Group", groups_path if @current_user %></h3>
 <h3><%= link_to "Create your own Group", new_group_path if @current_user %></h3>
 
-<div class="groups">
+<div id="events">
   <% @memberships.each do |membership| %>
-    <div class= "group">
-      <p>Name: <%= link_to membership.group.name, "/groups/#{membership.group.id}" %></p>
-      <p>Number of Members: <%= membership.group.num_members %></p>
+    <div class="event">
+      <div class="event-group-row">
+        <h2><%= link_to membership.group.name, "/groups/#{membership.group.id}" %></h2>
+      </div>
+      <div class="event-titles">
+        <div class="event-details">
+          <h3><%= membership.group.memberships.count %> Members</h3>
+        </div>
+      </div>
+      <div class="event-titles2">
+        <div class="event-details">
+          <% if membership.group.events.count == 1 %>
+            <p><%= membership.group.events.count %> Upcoming Event </p>
+          <% else %>
+            <p><%= membership.group.events.count %> Upcoming Events </p>
+          <% end %>
+        </div>
+      </div>
     </div>
   <% end %>
 </div>

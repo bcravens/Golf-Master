@@ -1,36 +1,19 @@
-## Week 6 Homework
 
-In preparation for building an app from scratch in Rails, this week's only HW will be to build a CRUD app from the ground up. For this homework, you will build an app of your choosing.
+### BRONZE
+* As a user I want to be able to look at course information and all their holes.
+* As a user I wanted to be able to add new courses that aren't in the database and then add new holes to that course.
+* As a user I want to be able to edit and delete these courses.
 
-If you don't have any ideas for projects, use the list of sample projects below.
+### SILVER
+* As a user I want to be able to sign up for an account.
+* As a user I don't want people who aren't logged in to edit the database.
+* As a user I want to be able to create groups with other users. I want that group to have full CRUD functionality. I want that group to show other users in the group.
 
-If you have multiple ideas for project week, this may be a good opportunity to try one out. We would suggest not doing the same project over for project week, so you don't burn out.  
+### GOLD
+* As a user I want to be able to organize events for groups that I'm in. I want that event to display the data and time it starts, and the course that its at.
+* As a user I want to be able to bet on holes with other users in that group at an event that I'm attending. I want the event to display all current bets.
 
-### Requirements (MVP)
+### PLAT
+* As a user I want to be able to create multiple bets at once.
 
-- Due Friday at 9:00AM
-- Must have 2 models
-- Must have 1 association between models
-- Have complete RESTful routes for at least 1 model
-- Include Error Handling & Validations for all models
-
-#### Bonuses (Silver)
-  - More than 3 models
-  - Model with many-to-many relationship
-
-#### Ultra Bonuses (Gold, Platinum)
-  - User authentication
-  - Use websockets
-
-### Suggestions for Apps
-
-  - Cookbook
-    - Models: Recipe & Ingredient
-  - Messaging platform
-    - Models: Message & User
-  - Event Scheduler
-    - Models: Location & Event, Event & User
-  - Song Playlist app
-    - Models: Song & Playlist
-  - Dating Site for Pokemon
-    - Models: Pokemon & Date
+![ERD Model](/erd.pdf?raw=true "ERD Model")

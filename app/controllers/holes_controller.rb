@@ -1,5 +1,5 @@
 class HolesController < ApplicationController
-
+## In general, you seem to be doin alot with user auth for redirection. Look into the cancancan gem and do some research on authorizations.
   def index
     @holes = Hole.all
   end

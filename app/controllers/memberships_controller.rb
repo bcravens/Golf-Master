@@ -5,6 +5,7 @@ class MembershipsController < ApplicationController
   end
 
   def new
+    ## get this out of production code
     puts "****************************"
     puts @current_user.inspect
     redirect_to root_path unless @current_user

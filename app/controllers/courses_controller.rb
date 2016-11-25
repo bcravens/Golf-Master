@@ -8,6 +8,7 @@ class CoursesController < ApplicationController
     @course = Course.find(params[:id])
   end
 
+# redirection abstraction
   def new
     redirect_to courses_path unless @current_user
     @course = Course.new

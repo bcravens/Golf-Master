@@ -1,0 +1,1166 @@
+  [1m[35m (7.7ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" character varying PRIMARY KEY)[0m
+  [1m[35m (3.0ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" character varying PRIMARY KEY, "value" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT pg_try_advisory_lock(7276505529784482705);[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.4ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to CreateGroups (20161107130346)
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (4.5ms)[0m  [1m[35mCREATE TABLE "groups" ("id" serial primary key, "name" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  [1m[35mSQL (0.5ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20161107130346"]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateCourses (20161108225431)
+  [1m[35m (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (7.3ms)[0m  [1m[35mCREATE TABLE "courses" ("id" serial primary key, "img_url" character varying, "name" character varying, "location" character varying, "num_holes" integer, "par" integer, "yardage" integer, "rating" integer, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20161108225431"]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateHoles (20161108231933)
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (10.6ms)[0m  [1m[35mCREATE TABLE "holes" ("id" serial primary key, "img_url" character varying, "hole_num" integer, "par" integer, "yardage" integer, "course_id" integer, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL, CONSTRAINT "fk_rails_6d0dd30f7d"
+FOREIGN KEY ("course_id")
+  REFERENCES "courses" ("id")
+)[0m
+  [1m[35m (0.9ms)[0m  [1m[35mCREATE  INDEX  "index_holes_on_course_id" ON "holes"  ("course_id")[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20161108231933"]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateEvents (20161109131238)
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (4.2ms)[0m  [1m[35mCREATE TABLE "events" ("id" serial primary key, "name" character varying, "time" timestamp, "course_id" integer, "group_id" integer, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL, CONSTRAINT "fk_rails_2903a9801c"
+FOREIGN KEY ("course_id")
+  REFERENCES "courses" ("id")
+, CONSTRAINT "fk_rails_61fbf6ca48"
+FOREIGN KEY ("group_id")
+  REFERENCES "groups" ("id")
+)[0m
+  [1m[35m (0.8ms)[0m  [1m[35mCREATE  INDEX  "index_events_on_course_id" ON "events"  ("course_id")[0m
+  [1m[35m (1.0ms)[0m  [1m[35mCREATE  INDEX  "index_events_on_group_id" ON "events"  ("group_id")[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20161109131238"]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateUsers (20161109140459)
+  [1m[35m (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (8.3ms)[0m  [1m[35mCREATE TABLE "users" ("id" serial primary key, "name" character varying, "email" character varying, "username" character varying, "password" character varying)[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20161109140459"]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateBets (20161112150340)
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (7.0ms)[0m  [1m[35mCREATE TABLE "bets" ("id" serial primary key, "amount" integer, "hole_id" integer, "course_id" integer, "event_id" integer, "user_id" integer, CONSTRAINT "fk_rails_a8a890dfea"
+FOREIGN KEY ("hole_id")
+  REFERENCES "holes" ("id")
+, CONSTRAINT "fk_rails_ef7a7656b9"
+FOREIGN KEY ("course_id")
+  REFERENCES "courses" ("id")
+, CONSTRAINT "fk_rails_d3ef293721"
+FOREIGN KEY ("event_id")
+  REFERENCES "events" ("id")
+, CONSTRAINT "fk_rails_87dbfdd206"
+FOREIGN KEY ("user_id")
+  REFERENCES "users" ("id")
+)[0m
+  [1m[35m (1.4ms)[0m  [1m[35mCREATE  INDEX  "index_bets_on_hole_id" ON "bets"  ("hole_id")[0m
+  [1m[35m (1.8ms)[0m  [1m[35mCREATE  INDEX  "index_bets_on_course_id" ON "bets"  ("course_id")[0m
+  [1m[35m (0.8ms)[0m  [1m[35mCREATE  INDEX  "index_bets_on_event_id" ON "bets"  ("event_id")[0m
+  [1m[35m (0.8ms)[0m  [1m[35mCREATE  INDEX  "index_bets_on_user_id" ON "bets"  ("user_id")[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20161112150340"]]
+  [1m[35m (0.5ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateMemberships (20161112160924)
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (6.1ms)[0m  [1m[35mCREATE TABLE "memberships" ("id" serial primary key, "group_id" integer, "user_id" integer, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL, CONSTRAINT "fk_rails_aaf389f138"
+FOREIGN KEY ("group_id")
+  REFERENCES "groups" ("id")
+, CONSTRAINT "fk_rails_99326fb65d"
+FOREIGN KEY ("user_id")
+  REFERENCES "users" ("id")
+)[0m
+  [1m[35m (0.8ms)[0m  [1m[35mCREATE  INDEX  "index_memberships_on_group_id" ON "memberships"  ("group_id")[0m
+  [1m[35m (0.9ms)[0m  [1m[35mCREATE  INDEX  "index_memberships_on_user_id" ON "memberships"  ("user_id")[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20161112160924"]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.4ms)[0m  [1m[34mSELECT  "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", :environment], ["LIMIT", 1]]
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.6ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "key"[0m  [["key", "environment"], ["value", "development"], ["created_at", 2016-11-25 19:45:23 UTC], ["updated_at", 2016-11-25 19:45:23 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT pg_advisory_unlock(7276505529784482705)[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.2ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (3.9ms)[0m  [1m[34mSELECT t2.oid::regclass::text AS to_table, a1.attname AS column, a2.attname AS primary_key, c.conname AS name, c.confupdtype AS on_update, c.confdeltype AS on_delete
+FROM pg_constraint c
+JOIN pg_class t1 ON c.conrelid = t1.oid
+JOIN pg_class t2 ON c.confrelid = t2.oid
+JOIN pg_attribute a1 ON a1.attnum = c.conkey[1] AND a1.attrelid = t1.oid
+JOIN pg_attribute a2 ON a2.attnum = c.confkey[1] AND a2.attrelid = t2.oid
+JOIN pg_namespace t3 ON c.connamespace = t3.oid
+WHERE c.contype = 'f'
+  AND t1.relname = 'bets'
+  AND t3.nspname = ANY (current_schemas(false))
+ORDER BY c.conname
+[0m
+  [1m[35m (3.2ms)[0m  [1m[34mSELECT t2.oid::regclass::text AS to_table, a1.attname AS column, a2.attname AS primary_key, c.conname AS name, c.confupdtype AS on_update, c.confdeltype AS on_delete
+FROM pg_constraint c
+JOIN pg_class t1 ON c.conrelid = t1.oid
+JOIN pg_class t2 ON c.confrelid = t2.oid
+JOIN pg_attribute a1 ON a1.attnum = c.conkey[1] AND a1.attrelid = t1.oid
+JOIN pg_attribute a2 ON a2.attnum = c.confkey[1] AND a2.attrelid = t2.oid
+JOIN pg_namespace t3 ON c.connamespace = t3.oid
+WHERE c.contype = 'f'
+  AND t1.relname = 'courses'
+  AND t3.nspname = ANY (current_schemas(false))
+ORDER BY c.conname
+[0m
+  [1m[35m (3.3ms)[0m  [1m[34mSELECT t2.oid::regclass::text AS to_table, a1.attname AS column, a2.attname AS primary_key, c.conname AS name, c.confupdtype AS on_update, c.confdeltype AS on_delete
+FROM pg_constraint c
+JOIN pg_class t1 ON c.conrelid = t1.oid
+JOIN pg_class t2 ON c.confrelid = t2.oid
+JOIN pg_attribute a1 ON a1.attnum = c.conkey[1] AND a1.attrelid = t1.oid
+JOIN pg_attribute a2 ON a2.attnum = c.confkey[1] AND a2.attrelid = t2.oid
+JOIN pg_namespace t3 ON c.connamespace = t3.oid
+WHERE c.contype = 'f'
+  AND t1.relname = 'events'
+  AND t3.nspname = ANY (current_schemas(false))
+ORDER BY c.conname
+[0m
+  [1m[35m (3.3ms)[0m  [1m[34mSELECT t2.oid::regclass::text AS to_table, a1.attname AS column, a2.attname AS primary_key, c.conname AS name, c.confupdtype AS on_update, c.confdeltype AS on_delete
+FROM pg_constraint c
+JOIN pg_class t1 ON c.conrelid = t1.oid
+JOIN pg_class t2 ON c.confrelid = t2.oid
+JOIN pg_attribute a1 ON a1.attnum = c.conkey[1] AND a1.attrelid = t1.oid
+JOIN pg_attribute a2 ON a2.attnum = c.confkey[1] AND a2.attrelid = t2.oid
+JOIN pg_namespace t3 ON c.connamespace = t3.oid
+WHERE c.contype = 'f'
+  AND t1.relname = 'groups'
+  AND t3.nspname = ANY (current_schemas(false))
+ORDER BY c.conname
+[0m
+  [1m[35m (4.5ms)[0m  [1m[34mSELECT t2.oid::regclass::text AS to_table, a1.attname AS column, a2.attname AS primary_key, c.conname AS name, c.confupdtype AS on_update, c.confdeltype AS on_delete
+FROM pg_constraint c
+JOIN pg_class t1 ON c.conrelid = t1.oid
+JOIN pg_class t2 ON c.confrelid = t2.oid
+JOIN pg_attribute a1 ON a1.attnum = c.conkey[1] AND a1.attrelid = t1.oid
+JOIN pg_attribute a2 ON a2.attnum = c.confkey[1] AND a2.attrelid = t2.oid
+JOIN pg_namespace t3 ON c.connamespace = t3.oid
+WHERE c.contype = 'f'
+  AND t1.relname = 'holes'
+  AND t3.nspname = ANY (current_schemas(false))
+ORDER BY c.conname
+[0m
+  [1m[35m (3.7ms)[0m  [1m[34mSELECT t2.oid::regclass::text AS to_table, a1.attname AS column, a2.attname AS primary_key, c.conname AS name, c.confupdtype AS on_update, c.confdeltype AS on_delete
+FROM pg_constraint c
+JOIN pg_class t1 ON c.conrelid = t1.oid
+JOIN pg_class t2 ON c.confrelid = t2.oid
+JOIN pg_attribute a1 ON a1.attnum = c.conkey[1] AND a1.attrelid = t1.oid
+JOIN pg_attribute a2 ON a2.attnum = c.confkey[1] AND a2.attrelid = t2.oid
+JOIN pg_namespace t3 ON c.connamespace = t3.oid
+WHERE c.contype = 'f'
+  AND t1.relname = 'memberships'
+  AND t3.nspname = ANY (current_schemas(false))
+ORDER BY c.conname
+[0m
+  [1m[35m (3.4ms)[0m  [1m[34mSELECT t2.oid::regclass::text AS to_table, a1.attname AS column, a2.attname AS primary_key, c.conname AS name, c.confupdtype AS on_update, c.confdeltype AS on_delete
+FROM pg_constraint c
+JOIN pg_class t1 ON c.conrelid = t1.oid
+JOIN pg_class t2 ON c.confrelid = t2.oid
+JOIN pg_attribute a1 ON a1.attnum = c.conkey[1] AND a1.attrelid = t1.oid
+JOIN pg_attribute a2 ON a2.attnum = c.confkey[1] AND a2.attrelid = t2.oid
+JOIN pg_namespace t3 ON c.connamespace = t3.oid
+WHERE c.contype = 'f'
+  AND t1.relname = 'users'
+  AND t3.nspname = ANY (current_schemas(false))
+ORDER BY c.conname
+[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.5ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[36mCourse Load (0.7ms)[0m  [1m[34mSELECT "courses".* FROM "courses"[0m
+  [1m[36mHole Load (0.5ms)[0m  [1m[34mSELECT "holes".* FROM "holes"[0m
+  [1m[36mGroup Load (0.5ms)[0m  [1m[34mSELECT "groups".* FROM "groups"[0m
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT "users".* FROM "users"[0m
+  [1m[36mBet Load (0.6ms)[0m  [1m[34mSELECT "bets".* FROM "bets"[0m
+  [1m[36mMembership Load (0.6ms)[0m  [1m[34mSELECT "memberships".* FROM "memberships"[0m
+  [1m[36mEvent Load (0.6ms)[0m  [1m[34mSELECT "events".* FROM "events"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mCourse Exists (0.7ms)[0m  [1m[34mSELECT  1 AS one FROM "courses" WHERE "courses"."name" = $1 LIMIT $2[0m  [["name", "Pebble Beach"], ["LIMIT", 1]]
+  [1m[35mSQL (0.7ms)[0m  [1m[32mINSERT INTO "courses" ("img_url", "name", "location", "num_holes", "par", "yardage", "rating", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING "id"[0m  [["img_url", "http://www.paraparaumubeachgolfclub.co.nz/clubs/320-1/images/banners-4.jpg"], ["name", "Pebble Beach"], ["location", "1700 17-Mile Drive, Pebble Beach, CA 93953"], ["num_holes", 18], ["par", 72], ["yardage", 6828], ["rating", 74], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (1.1ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/01PBGL16v2-ed-1560x600.jpg"], ["hole_num", 1], ["par", 4], ["yardage", 377], ["course_id", 1], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.5ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/02PBGL16-ed-1560x600.jpg"], ["hole_num", 2], ["par", 5], ["yardage", 511], ["course_id", 1], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/03PBGL16-ed-1560x600.jpg"], ["hole_num", 3], ["par", 4], ["yardage", 390], ["course_id", 1], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/04PBGL16-ed-1560x600.jpg"], ["hole_num", 4], ["par", 4], ["yardage", 326], ["course_id", 1], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.7ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/05PBGL16-ed-1560x600.jpg"], ["hole_num", 5], ["par", 3], ["yardage", 192], ["course_id", 1], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.6ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.5ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/06PBGL16-ed-1560x600.jpg"], ["hole_num", 6], ["par", 5], ["yardage", 506], ["course_id", 1], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/07PBGL16-ed-1560x600.jpg"], ["hole_num", 7], ["par", 3], ["yardage", 106], ["course_id", 1], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/08PBGL16-ed-1560x600.jpg"], ["hole_num", 8], ["par", 4], ["yardage", 427], ["course_id", 1], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/09PBGL16-ed-1560x600.jpg"], ["hole_num", 9], ["par", 4], ["yardage", 481], ["course_id", 1], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/10PBGL16-ed-1560x600.jpg"], ["hole_num", 10], ["par", 4], ["yardage", 446], ["course_id", 1], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/11PBGL16-ed-1560x600.jpg"], ["hole_num", 11], ["par", 4], ["yardage", 373], ["course_id", 1], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/12PBGL16-ed-1560x600.jpg"], ["hole_num", 12], ["par", 3], ["yardage", 201], ["course_id", 1], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/13PBGL16-ed-1560x600.jpg"], ["hole_num", 13], ["par", 4], ["yardage", 403], ["course_id", 1], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/14PBGL16-ed-1560x600.jpg"], ["hole_num", 14], ["par", 5], ["yardage", 152], ["course_id", 1], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/15PBGL16-ed-1560x600.jpg"], ["hole_num", 15], ["par", 4], ["yardage", 396], ["course_id", 1], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/16PBGL16-ed-1560x600.jpg"], ["hole_num", 16], ["par", 4], ["yardage", 401], ["course_id", 1], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/17PBGL16-ed-1560x600.jpg"], ["hole_num", 17], ["par", 3], ["yardage", 177], ["course_id", 1], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/18PBGL16-ed-1560x600.jpg"], ["hole_num", 18], ["par", 5], ["yardage", 543], ["course_id", 1], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mCourse Exists (0.3ms)[0m  [1m[34mSELECT  1 AS one FROM "courses" WHERE "courses"."name" = $1 LIMIT $2[0m  [["name", "Spyglass Hill"], ["LIMIT", 1]]
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "courses" ("img_url", "name", "location", "num_holes", "par", "yardage", "rating", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING "id"[0m  [["img_url", "http://d35hcom83xwl0h.cloudfront.net/assets/kauricliffs/generalpresentation/id19292pic5.jpg"], ["name", "Spyglass Hill"], ["location", "Stevenson Drive, Pebble Beach, CA 93953"], ["num_holes", 18], ["par", 72], ["yardage", 6960], ["rating", 75], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/spyglasshill-golf-map110.jpg"], ["hole_num", 1], ["par", 5], ["yardage", 595], ["course_id", 2], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/spyglasshill-golf-map22.jpg"], ["hole_num", 2], ["par", 4], ["yardage", 349], ["course_id", 2], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/spyglasshill-golf-map32.jpg"], ["hole_num", 3], ["par", 3], ["yardage", 172], ["course_id", 2], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/spyglasshill-golf-map42.jpg"], ["hole_num", 4], ["par", 4], ["yardage", 370], ["course_id", 2], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/spyglasshill-golf-map52.jpg"], ["hole_num", 5], ["par", 3], ["yardage", 197], ["course_id", 2], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/spyglasshill-golf-map62.jpg"], ["hole_num", 6], ["par", 4], ["yardage", 446], ["course_id", 2], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/spyglasshill-golf-map72.jpg"], ["hole_num", 7], ["par", 5], ["yardage", 529], ["course_id", 2], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/spyglasshill-golf-map82.jpg"], ["hole_num", 8], ["par", 4], ["yardage", 399], ["course_id", 2], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/spyglasshill-golf-map92.jpg"], ["hole_num", 9], ["par", 4], ["yardage", 431], ["course_id", 2], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/spyglasshill-golf-map102.jpg"], ["hole_num", 10], ["par", 4], ["yardage", 407], ["course_id", 2], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/spyglasshill-golf-map112.jpg"], ["hole_num", 11], ["par", 5], ["yardage", 528], ["course_id", 2], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/spyglasshill-golf-map122.jpg"], ["hole_num", 12], ["par", 3], ["yardage", 178], ["course_id", 2], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/spyglasshill-golf-map132.jpg"], ["hole_num", 13], ["par", 4], ["yardage", 460], ["course_id", 2], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/spyglasshill-golf-map142.jpg"], ["hole_num", 14], ["par", 5], ["yardage", 560], ["course_id", 2], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.5ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/spyglasshill-golf-map152.jpg"], ["hole_num", 15], ["par", 3], ["yardage", 130], ["course_id", 2], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/spyglasshill-golf-map162.jpg"], ["hole_num", 16], ["par", 4], ["yardage", 476], ["course_id", 2], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/spyglasshill-golf-map172.jpg"], ["hole_num", 17], ["par", 4], ["yardage", 325], ["course_id", 2], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/spyglasshill-golf-map182.jpg"], ["hole_num", 18], ["par", 4], ["yardage", 408], ["course_id", 2], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mCourse Exists (0.3ms)[0m  [1m[34mSELECT  1 AS one FROM "courses" WHERE "courses"."name" = $1 LIMIT $2[0m  [["name", "The Links at Spanish Bay"], ["LIMIT", 1]]
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "courses" ("img_url", "name", "location", "num_holes", "par", "yardage", "rating", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/pbgl-5-photogallery-1550x930.jpg"], ["name", "The Links at Spanish Bay"], ["location", "2700 17-Mile Drive, Pebble Beach, CA 93953"], ["num_holes", 18], ["par", 72], ["yardage", 6821], ["rating", 74], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/thelinksatspanishbay-golf-map19.jpg"], ["hole_num", 1], ["par", 5], ["yardage", 500], ["course_id", 3], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/thelinksatspanishbay-golf-map21.jpg"], ["hole_num", 2], ["par", 4], ["yardage", 307], ["course_id", 3], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/thelinksatspanishbay-golf-map31.jpg"], ["hole_num", 3], ["par", 4], ["yardage", 407], ["course_id", 3], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/thelinksatspanishbay-golf-map41.jpg"], ["hole_num", 4], ["par", 3], ["yardage", 190], ["course_id", 3], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/thelinksatspanishbay-golf-map51.jpg"], ["hole_num", 5], ["par", 4], ["yardage", 451], ["course_id", 3], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/thelinksatspanishbay-golf-map61.jpg"], ["hole_num", 6], ["par", 4], ["yardage", 400], ["course_id", 3], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/thelinksatspanishbay-golf-map71.jpg"], ["hole_num", 7], ["par", 4], ["yardage", 418], ["course_id", 3], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/thelinksatspanishbay-golf-map81.jpg"], ["hole_num", 8], ["par", 3], ["yardage", 158], ["course_id", 3], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/thelinksatspanishbay-golf-map91.jpg"], ["hole_num", 9], ["par", 4], ["yardage", 394], ["course_id", 3], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.5ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/thelinksatspanishbay-golf-map101.jpg"], ["hole_num", 10], ["par", 5], ["yardage", 520], ["course_id", 3], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.5ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/thelinksatspanishbay-golf-map111.jpg"], ["hole_num", 11], ["par", 4], ["yardage", 365], ["course_id", 3], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/thelinksatspanishbay-golf-map121.jpg"], ["hole_num", 12], ["par", 4], ["yardage", 432], ["course_id", 3], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/thelinksatspanishbay-golf-map131.jpg"], ["hole_num", 13], ["par", 3], ["yardage", 126], ["course_id", 3], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/thelinksatspanishbay-golf-map141.jpg"], ["hole_num", 14], ["par", 5], ["yardage", 576], ["course_id", 3], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/thelinksatspanishbay-golf-map151.jpg"], ["hole_num", 15], ["par", 4], ["yardage", 390], ["course_id", 3], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/thelinksatspanishbay-golf-map161.jpg"], ["hole_num", 16], ["par", 3], ["yardage", 200], ["course_id", 3], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/thelinksatspanishbay-golf-map171.jpg"], ["hole_num", 17], ["par", 4], ["yardage", 413], ["course_id", 3], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/thelinksatspanishbay-golf-map181.jpg"], ["hole_num", 18], ["par", 5], ["yardage", 574], ["course_id", 3], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mCourse Exists (0.3ms)[0m  [1m[34mSELECT  1 AS one FROM "courses" WHERE "courses"."name" = $1 LIMIT $2[0m  [["name", "Del Monte"], ["LIMIT", 1]]
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "courses" ("img_url", "name", "location", "num_holes", "par", "yardage", "rating", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/pbgl-10-photogallery-1550x930.jpg"], ["name", "Del Monte"], ["location", "1300 Sylvan Road, Monterey, CA 93940"], ["num_holes", 18], ["par", 72], ["yardage", 6365], ["rating", 71], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/delmonte-golf-map1-e1456159618813.jpg"], ["hole_num", 1], ["par", 5], ["yardage", 505], ["course_id", 4], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/delmonte-golf-map21.jpg"], ["hole_num", 2], ["par", 4], ["yardage", 328], ["course_id", 4], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/delmonte-golf-map31.jpg"], ["hole_num", 3], ["par", 4], ["yardage", 376], ["course_id", 4], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.5ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/delmonte-golf-map41.jpg"], ["hole_num", 4], ["par", 3], ["yardage", 178], ["course_id", 4], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/delmonte-golf-map51.jpg"], ["hole_num", 5], ["par", 4], ["yardage", 327], ["course_id", 4], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/delmonte-golf-map61.jpg"], ["hole_num", 6], ["par", 3], ["yardage", 196], ["course_id", 4], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/delmonte-golf-map71.jpg"], ["hole_num", 7], ["par", 4], ["yardage", 379], ["course_id", 4], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/delmonte-golf-map81.jpg"], ["hole_num", 8], ["par", 4], ["yardage", 384], ["course_id", 4], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/thelinksatspanishbay-golf-map91.jpg"], ["hole_num", 9], ["par", 4], ["yardage", 394], ["course_id", 4], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/delmonte-golf-map101.jpg"], ["hole_num", 10], ["par", 4], ["yardage", 293], ["course_id", 4], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/delmonte-golf-map111.jpg"], ["hole_num", 11], ["par", 4], ["yardage", 331], ["course_id", 4], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/delmonte-golf-map121.jpg"], ["hole_num", 12], ["par", 3], ["yardage", 171], ["course_id", 4], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/delmonte-golf-map131.jpg"], ["hole_num", 13], ["par", 5], ["yardage", 512], ["course_id", 4], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/delmonte-golf-map141.jpg"], ["hole_num", 14], ["par", 3], ["yardage", 218], ["course_id", 4], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/delmonte-golf-map152.jpg"], ["hole_num", 15], ["par", 4], ["yardage", 330], ["course_id", 4], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/delmonte-golf-map161.jpg"], ["hole_num", 16], ["par", 4], ["yardage", 421], ["course_id", 4], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/delmonte-golf-map172.jpg"], ["hole_num", 17], ["par", 5], ["yardage", 500], ["course_id", 4], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "holes" ("img_url", "hole_num", "par", "yardage", "course_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["img_url", "https://www.pebblebeach.com/content/uploads/delmonte-golf-map181.jpg"], ["hole_num", 18], ["par", 5], ["yardage", 392], ["course_id", 4], ["created_at", 2016-11-25 19:45:25 UTC], ["updated_at", 2016-11-25 19:45:25 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mCourse Load (0.3ms)[0m  [1m[34mSELECT  "courses".* FROM "courses" WHERE "courses"."name" = $1 ORDER BY "courses"."id" ASC LIMIT $2[0m  [["name", "Del Monte"], ["LIMIT", 1]]
+  [1m[36mCourse Load (0.2ms)[0m  [1m[34mSELECT  "courses".* FROM "courses" WHERE "courses"."name" = $1 ORDER BY "courses"."id" ASC LIMIT $2[0m  [["name", "Pebble Beach"], ["LIMIT", 1]]
+  [1m[36mCourse Load (0.2ms)[0m  [1m[34mSELECT  "courses".* FROM "courses" WHERE "courses"."name" = $1 ORDER BY "courses"."id" ASC LIMIT $2[0m  [["name", "Spyglass Hill"], ["LIMIT", 1]]
+  [1m[36mCourse Load (0.2ms)[0m  [1m[34mSELECT  "courses".* FROM "courses" WHERE "courses"."name" = $1 ORDER BY "courses"."id" ASC LIMIT $2[0m  [["name", "The Links at Spanish Bay"], ["LIMIT", 1]]
+  [1m[36mHole Load (0.3ms)[0m  [1m[34mSELECT  "holes".* FROM "holes" WHERE "holes"."course_id" = $1 ORDER BY "holes"."id" ASC LIMIT $2[0m  [["course_id", 4], ["LIMIT", 1]]
+  [1m[36mHole Load (0.3ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 4]]
+  [1m[36mHole Load (0.3ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 4]]
+  [1m[36mHole Load (0.3ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 4]]
+  [1m[36mHole Load (0.3ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 4]]
+  [1m[36mHole Load (0.3ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 4]]
+  [1m[36mHole Load (0.3ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 4]]
+  [1m[36mHole Load (0.2ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 4]]
+  [1m[36mHole Load (0.3ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 4]]
+  [1m[36mHole Load (0.2ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 4]]
+  [1m[36mHole Load (0.2ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 4]]
+  [1m[36mHole Load (0.2ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 4]]
+  [1m[36mHole Load (0.3ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 4]]
+  [1m[36mHole Load (0.2ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 4]]
+  [1m[36mHole Load (0.2ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 4]]
+  [1m[36mHole Load (0.2ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 4]]
+  [1m[36mHole Load (0.2ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 4]]
+  [1m[36mHole Load (0.2ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 4]]
+  [1m[36mHole Load (0.3ms)[0m  [1m[34mSELECT  "holes".* FROM "holes" WHERE "holes"."course_id" = $1 ORDER BY "holes"."id" ASC LIMIT $2[0m  [["course_id", 1], ["LIMIT", 1]]
+  [1m[36mHole Load (0.2ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 1]]
+  [1m[36mHole Load (0.4ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 1]]
+  [1m[36mHole Load (0.4ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 1]]
+  [1m[36mHole Load (0.4ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 1]]
+  [1m[36mHole Load (0.3ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 1]]
+  [1m[36mHole Load (0.2ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 1]]
+  [1m[36mHole Load (0.2ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 1]]
+  [1m[36mHole Load (0.2ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 1]]
+  [1m[36mHole Load (0.2ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 1]]
+  [1m[36mHole Load (0.2ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 1]]
+  [1m[36mHole Load (0.2ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 1]]
+  [1m[36mHole Load (0.2ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 1]]
+  [1m[36mHole Load (0.2ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 1]]
+  [1m[36mHole Load (0.2ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 1]]
+  [1m[36mHole Load (0.2ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 1]]
+  [1m[36mHole Load (0.2ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 1]]
+  [1m[36mHole Load (0.2ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 1]]
+  [1m[36mHole Load (0.3ms)[0m  [1m[34mSELECT  "holes".* FROM "holes" WHERE "holes"."course_id" = $1 ORDER BY "holes"."id" ASC LIMIT $2[0m  [["course_id", 2], ["LIMIT", 1]]
+  [1m[36mHole Load (0.2ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 2]]
+  [1m[36mHole Load (0.2ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 2]]
+  [1m[36mHole Load (0.2ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 2]]
+  [1m[36mHole Load (0.2ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 2]]
+  [1m[36mHole Load (0.2ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 2]]
+  [1m[36mHole Load (0.2ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 2]]
+  [1m[36mHole Load (0.2ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 2]]
+  [1m[36mHole Load (0.2ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 2]]
+  [1m[36mHole Load (0.2ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 2]]
+  [1m[36mHole Load (0.2ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 2]]
+  [1m[36mHole Load (0.2ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 2]]
+  [1m[36mHole Load (0.2ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 2]]
+  [1m[36mHole Load (0.5ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 2]]
+  [1m[36mHole Load (0.2ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 2]]
+  [1m[36mHole Load (0.2ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 2]]
+  [1m[36mHole Load (0.3ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 2]]
+  [1m[36mHole Load (0.2ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 2]]
+  [1m[36mHole Load (0.3ms)[0m  [1m[34mSELECT  "holes".* FROM "holes" WHERE "holes"."course_id" = $1 ORDER BY "holes"."id" ASC LIMIT $2[0m  [["course_id", 3], ["LIMIT", 1]]
+  [1m[36mHole Load (0.2ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 3]]
+  [1m[36mHole Load (0.2ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 3]]
+  [1m[36mHole Load (0.2ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 3]]
+  [1m[36mHole Load (0.2ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 3]]
+  [1m[36mHole Load (0.2ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 3]]
+  [1m[36mHole Load (0.2ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 3]]
+  [1m[36mHole Load (0.2ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 3]]
+  [1m[36mHole Load (0.2ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 3]]
+  [1m[36mHole Load (0.2ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 3]]
+  [1m[36mHole Load (0.2ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 3]]
+  [1m[36mHole Load (0.2ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 3]]
+  [1m[36mHole Load (0.2ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 3]]
+  [1m[36mHole Load (0.2ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 3]]
+  [1m[36mHole Load (0.2ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 3]]
+  [1m[36mHole Load (0.2ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 3]]
+  [1m[36mHole Load (0.2ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 3]]
+  [1m[36mHole Load (0.2ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 3]]
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.5ms)[0m  [1m[32mINSERT INTO "groups" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "Bradley and Friends"], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "groups" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "General Assembly"], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "groups" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "DC Tech Meetup"], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "groups" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "Class '12"], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "groups" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "Rockbridge Family"], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "groups" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "Bonding"], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "groups" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "People world"], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "groups" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "Good Times"], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "groups" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "Strong Ties"], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "groups" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "Weekend Kings"], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "groups" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "People I love"], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "groups" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "Around the World"], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "groups" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "Having Fun"], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "groups" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "Near and Dear"], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "groups" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "Paul and the Gang"], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "groups" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "Queen Bees"], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "groups" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "Bachelors"], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "groups" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "The Herd"], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "groups" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "Favulous Five"], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "groups" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "Mountain Movers"], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "groups" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "Alpha & Omega"], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "groups" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "The Folks"], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "groups" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "The Difters"], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "groups" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "Hang Over"], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "groups" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "Music Maniacs"], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.5ms)[0m  [1m[32mINSERT INTO "users" ("name", "email", "username") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "Bradley"], ["email", "bradley@gmail.com"], ["username", "user1"]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "users" ("name", "email", "username") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "Paul"], ["email", "paul@gmail.com"], ["username", "user1"]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "users" ("name", "email", "username") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "Ryan"], ["email", "ryan@gmail.com"], ["username", "user1"]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "users" ("name", "email", "username") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "Eric"], ["email", "eric@gmail.com"], ["username", "user1"]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "users" ("name", "email", "username") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "Jolie"], ["email", "jolie@gmail.com"], ["username", "user1"]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "users" ("name", "email", "username") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "Ethan"], ["email", "ethan@gmail.com"], ["username", "user1"]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "users" ("name", "email", "username") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "Mike"], ["email", "mike@gmail.com"], ["username", "user1"]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "users" ("name", "email", "username") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "Christina"], ["email", "christina@gmail.com"], ["username", "user1"]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "users" ("name", "email", "username") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "Zach"], ["email", "zach@gmail.com"], ["username", "user1"]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "users" ("name", "email", "username") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "Dylan"], ["email", "dylan@gmail.com"], ["username", "user1"]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mMembership Exists (0.4ms)[0m  [1m[34mSELECT  1 AS one FROM "memberships" WHERE "memberships"."user_id" = $1 AND "memberships"."group_id" = $2 LIMIT $3[0m  [["user_id", 1], ["group_id", 1], ["LIMIT", 1]]
+  [1m[35mSQL (1.2ms)[0m  [1m[32mINSERT INTO "memberships" ("group_id", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["group_id", 1], ["user_id", 1], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mMembership Exists (0.4ms)[0m  [1m[34mSELECT  1 AS one FROM "memberships" WHERE "memberships"."user_id" = $1 AND "memberships"."group_id" = $2 LIMIT $3[0m  [["user_id", 2], ["group_id", 1], ["LIMIT", 1]]
+  [1m[35mSQL (0.5ms)[0m  [1m[32mINSERT INTO "memberships" ("group_id", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["group_id", 1], ["user_id", 2], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mMembership Exists (0.3ms)[0m  [1m[34mSELECT  1 AS one FROM "memberships" WHERE "memberships"."user_id" = $1 AND "memberships"."group_id" = $2 LIMIT $3[0m  [["user_id", 3], ["group_id", 1], ["LIMIT", 1]]
+  [1m[35mSQL (0.5ms)[0m  [1m[32mINSERT INTO "memberships" ("group_id", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["group_id", 1], ["user_id", 3], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mMembership Exists (0.3ms)[0m  [1m[34mSELECT  1 AS one FROM "memberships" WHERE "memberships"."user_id" = $1 AND "memberships"."group_id" = $2 LIMIT $3[0m  [["user_id", 4], ["group_id", 1], ["LIMIT", 1]]
+  [1m[35mSQL (0.7ms)[0m  [1m[32mINSERT INTO "memberships" ("group_id", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["group_id", 1], ["user_id", 4], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mMembership Exists (0.3ms)[0m  [1m[34mSELECT  1 AS one FROM "memberships" WHERE "memberships"."user_id" = $1 AND "memberships"."group_id" = $2 LIMIT $3[0m  [["user_id", 5], ["group_id", 1], ["LIMIT", 1]]
+  [1m[35mSQL (0.5ms)[0m  [1m[32mINSERT INTO "memberships" ("group_id", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["group_id", 1], ["user_id", 5], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mMembership Exists (0.3ms)[0m  [1m[34mSELECT  1 AS one FROM "memberships" WHERE "memberships"."user_id" = $1 AND "memberships"."group_id" = $2 LIMIT $3[0m  [["user_id", 1], ["group_id", 2], ["LIMIT", 1]]
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "memberships" ("group_id", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["group_id", 2], ["user_id", 1], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mMembership Exists (0.3ms)[0m  [1m[34mSELECT  1 AS one FROM "memberships" WHERE "memberships"."user_id" = $1 AND "memberships"."group_id" = $2 LIMIT $3[0m  [["user_id", 2], ["group_id", 2], ["LIMIT", 1]]
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "memberships" ("group_id", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["group_id", 2], ["user_id", 2], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mMembership Exists (0.3ms)[0m  [1m[34mSELECT  1 AS one FROM "memberships" WHERE "memberships"."user_id" = $1 AND "memberships"."group_id" = $2 LIMIT $3[0m  [["user_id", 3], ["group_id", 2], ["LIMIT", 1]]
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "memberships" ("group_id", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["group_id", 2], ["user_id", 3], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mMembership Exists (0.3ms)[0m  [1m[34mSELECT  1 AS one FROM "memberships" WHERE "memberships"."user_id" = $1 AND "memberships"."group_id" = $2 LIMIT $3[0m  [["user_id", 4], ["group_id", 2], ["LIMIT", 1]]
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "memberships" ("group_id", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["group_id", 2], ["user_id", 4], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mMembership Exists (0.3ms)[0m  [1m[34mSELECT  1 AS one FROM "memberships" WHERE "memberships"."user_id" = $1 AND "memberships"."group_id" = $2 LIMIT $3[0m  [["user_id", 5], ["group_id", 2], ["LIMIT", 1]]
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "memberships" ("group_id", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["group_id", 2], ["user_id", 5], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mMembership Exists (0.5ms)[0m  [1m[34mSELECT  1 AS one FROM "memberships" WHERE "memberships"."user_id" = $1 AND "memberships"."group_id" = $2 LIMIT $3[0m  [["user_id", 1], ["group_id", 3], ["LIMIT", 1]]
+  [1m[35mSQL (0.5ms)[0m  [1m[32mINSERT INTO "memberships" ("group_id", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["group_id", 3], ["user_id", 1], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mMembership Exists (0.3ms)[0m  [1m[34mSELECT  1 AS one FROM "memberships" WHERE "memberships"."user_id" = $1 AND "memberships"."group_id" = $2 LIMIT $3[0m  [["user_id", 2], ["group_id", 3], ["LIMIT", 1]]
+  [1m[35mSQL (2.3ms)[0m  [1m[32mINSERT INTO "memberships" ("group_id", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["group_id", 3], ["user_id", 2], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.6ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mMembership Exists (0.4ms)[0m  [1m[34mSELECT  1 AS one FROM "memberships" WHERE "memberships"."user_id" = $1 AND "memberships"."group_id" = $2 LIMIT $3[0m  [["user_id", 3], ["group_id", 3], ["LIMIT", 1]]
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "memberships" ("group_id", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["group_id", 3], ["user_id", 3], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mMembership Exists (0.3ms)[0m  [1m[34mSELECT  1 AS one FROM "memberships" WHERE "memberships"."user_id" = $1 AND "memberships"."group_id" = $2 LIMIT $3[0m  [["user_id", 4], ["group_id", 3], ["LIMIT", 1]]
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "memberships" ("group_id", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["group_id", 3], ["user_id", 4], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mMembership Exists (0.3ms)[0m  [1m[34mSELECT  1 AS one FROM "memberships" WHERE "memberships"."user_id" = $1 AND "memberships"."group_id" = $2 LIMIT $3[0m  [["user_id", 5], ["group_id", 3], ["LIMIT", 1]]
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "memberships" ("group_id", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["group_id", 3], ["user_id", 5], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mMembership Exists (0.3ms)[0m  [1m[34mSELECT  1 AS one FROM "memberships" WHERE "memberships"."user_id" = $1 AND "memberships"."group_id" = $2 LIMIT $3[0m  [["user_id", 1], ["group_id", 4], ["LIMIT", 1]]
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "memberships" ("group_id", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["group_id", 4], ["user_id", 1], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mMembership Exists (0.3ms)[0m  [1m[34mSELECT  1 AS one FROM "memberships" WHERE "memberships"."user_id" = $1 AND "memberships"."group_id" = $2 LIMIT $3[0m  [["user_id", 2], ["group_id", 4], ["LIMIT", 1]]
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "memberships" ("group_id", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["group_id", 4], ["user_id", 2], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mMembership Exists (0.4ms)[0m  [1m[34mSELECT  1 AS one FROM "memberships" WHERE "memberships"."user_id" = $1 AND "memberships"."group_id" = $2 LIMIT $3[0m  [["user_id", 3], ["group_id", 4], ["LIMIT", 1]]
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "memberships" ("group_id", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["group_id", 4], ["user_id", 3], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mMembership Exists (0.3ms)[0m  [1m[34mSELECT  1 AS one FROM "memberships" WHERE "memberships"."user_id" = $1 AND "memberships"."group_id" = $2 LIMIT $3[0m  [["user_id", 4], ["group_id", 4], ["LIMIT", 1]]
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "memberships" ("group_id", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["group_id", 4], ["user_id", 4], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mMembership Exists (0.3ms)[0m  [1m[34mSELECT  1 AS one FROM "memberships" WHERE "memberships"."user_id" = $1 AND "memberships"."group_id" = $2 LIMIT $3[0m  [["user_id", 5], ["group_id", 4], ["LIMIT", 1]]
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "memberships" ("group_id", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["group_id", 4], ["user_id", 5], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mMembership Exists (0.3ms)[0m  [1m[34mSELECT  1 AS one FROM "memberships" WHERE "memberships"."user_id" = $1 AND "memberships"."group_id" = $2 LIMIT $3[0m  [["user_id", 1], ["group_id", 5], ["LIMIT", 1]]
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "memberships" ("group_id", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["group_id", 5], ["user_id", 1], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mMembership Exists (0.3ms)[0m  [1m[34mSELECT  1 AS one FROM "memberships" WHERE "memberships"."user_id" = $1 AND "memberships"."group_id" = $2 LIMIT $3[0m  [["user_id", 2], ["group_id", 5], ["LIMIT", 1]]
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "memberships" ("group_id", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["group_id", 5], ["user_id", 2], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mMembership Exists (0.3ms)[0m  [1m[34mSELECT  1 AS one FROM "memberships" WHERE "memberships"."user_id" = $1 AND "memberships"."group_id" = $2 LIMIT $3[0m  [["user_id", 3], ["group_id", 5], ["LIMIT", 1]]
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "memberships" ("group_id", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["group_id", 5], ["user_id", 3], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mMembership Exists (0.3ms)[0m  [1m[34mSELECT  1 AS one FROM "memberships" WHERE "memberships"."user_id" = $1 AND "memberships"."group_id" = $2 LIMIT $3[0m  [["user_id", 4], ["group_id", 5], ["LIMIT", 1]]
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "memberships" ("group_id", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["group_id", 5], ["user_id", 4], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mMembership Exists (0.3ms)[0m  [1m[34mSELECT  1 AS one FROM "memberships" WHERE "memberships"."user_id" = $1 AND "memberships"."group_id" = $2 LIMIT $3[0m  [["user_id", 5], ["group_id", 5], ["LIMIT", 1]]
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "memberships" ("group_id", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["group_id", 5], ["user_id", 5], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mMembership Exists (0.3ms)[0m  [1m[34mSELECT  1 AS one FROM "memberships" WHERE "memberships"."user_id" = $1 AND "memberships"."group_id" = $2 LIMIT $3[0m  [["user_id", 1], ["group_id", 6], ["LIMIT", 1]]
+  [1m[35mSQL (0.8ms)[0m  [1m[32mINSERT INTO "memberships" ("group_id", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["group_id", 6], ["user_id", 1], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.5ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mMembership Exists (0.5ms)[0m  [1m[34mSELECT  1 AS one FROM "memberships" WHERE "memberships"."user_id" = $1 AND "memberships"."group_id" = $2 LIMIT $3[0m  [["user_id", 2], ["group_id", 6], ["LIMIT", 1]]
+  [1m[35mSQL (0.6ms)[0m  [1m[32mINSERT INTO "memberships" ("group_id", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["group_id", 6], ["user_id", 2], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mMembership Exists (0.5ms)[0m  [1m[34mSELECT  1 AS one FROM "memberships" WHERE "memberships"."user_id" = $1 AND "memberships"."group_id" = $2 LIMIT $3[0m  [["user_id", 3], ["group_id", 6], ["LIMIT", 1]]
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "memberships" ("group_id", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["group_id", 6], ["user_id", 3], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mMembership Exists (0.3ms)[0m  [1m[34mSELECT  1 AS one FROM "memberships" WHERE "memberships"."user_id" = $1 AND "memberships"."group_id" = $2 LIMIT $3[0m  [["user_id", 4], ["group_id", 6], ["LIMIT", 1]]
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "memberships" ("group_id", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["group_id", 6], ["user_id", 4], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mMembership Exists (0.4ms)[0m  [1m[34mSELECT  1 AS one FROM "memberships" WHERE "memberships"."user_id" = $1 AND "memberships"."group_id" = $2 LIMIT $3[0m  [["user_id", 5], ["group_id", 6], ["LIMIT", 1]]
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "memberships" ("group_id", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["group_id", 6], ["user_id", 5], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mMembership Exists (0.3ms)[0m  [1m[34mSELECT  1 AS one FROM "memberships" WHERE "memberships"."user_id" = $1 AND "memberships"."group_id" = $2 LIMIT $3[0m  [["user_id", 1], ["group_id", 7], ["LIMIT", 1]]
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "memberships" ("group_id", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["group_id", 7], ["user_id", 1], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.5ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mMembership Exists (0.3ms)[0m  [1m[34mSELECT  1 AS one FROM "memberships" WHERE "memberships"."user_id" = $1 AND "memberships"."group_id" = $2 LIMIT $3[0m  [["user_id", 2], ["group_id", 7], ["LIMIT", 1]]
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "memberships" ("group_id", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["group_id", 7], ["user_id", 2], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mMembership Exists (0.3ms)[0m  [1m[34mSELECT  1 AS one FROM "memberships" WHERE "memberships"."user_id" = $1 AND "memberships"."group_id" = $2 LIMIT $3[0m  [["user_id", 3], ["group_id", 7], ["LIMIT", 1]]
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "memberships" ("group_id", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["group_id", 7], ["user_id", 3], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mMembership Exists (0.3ms)[0m  [1m[34mSELECT  1 AS one FROM "memberships" WHERE "memberships"."user_id" = $1 AND "memberships"."group_id" = $2 LIMIT $3[0m  [["user_id", 4], ["group_id", 7], ["LIMIT", 1]]
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "memberships" ("group_id", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["group_id", 7], ["user_id", 4], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mMembership Exists (0.3ms)[0m  [1m[34mSELECT  1 AS one FROM "memberships" WHERE "memberships"."user_id" = $1 AND "memberships"."group_id" = $2 LIMIT $3[0m  [["user_id", 5], ["group_id", 7], ["LIMIT", 1]]
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "memberships" ("group_id", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["group_id", 7], ["user_id", 5], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mMembership Exists (0.3ms)[0m  [1m[34mSELECT  1 AS one FROM "memberships" WHERE "memberships"."user_id" = $1 AND "memberships"."group_id" = $2 LIMIT $3[0m  [["user_id", 1], ["group_id", 8], ["LIMIT", 1]]
+  [1m[35mSQL (0.5ms)[0m  [1m[32mINSERT INTO "memberships" ("group_id", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["group_id", 8], ["user_id", 1], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mMembership Exists (0.3ms)[0m  [1m[34mSELECT  1 AS one FROM "memberships" WHERE "memberships"."user_id" = $1 AND "memberships"."group_id" = $2 LIMIT $3[0m  [["user_id", 2], ["group_id", 8], ["LIMIT", 1]]
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "memberships" ("group_id", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["group_id", 8], ["user_id", 2], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mMembership Exists (0.3ms)[0m  [1m[34mSELECT  1 AS one FROM "memberships" WHERE "memberships"."user_id" = $1 AND "memberships"."group_id" = $2 LIMIT $3[0m  [["user_id", 3], ["group_id", 8], ["LIMIT", 1]]
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "memberships" ("group_id", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["group_id", 8], ["user_id", 3], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mMembership Exists (0.3ms)[0m  [1m[34mSELECT  1 AS one FROM "memberships" WHERE "memberships"."user_id" = $1 AND "memberships"."group_id" = $2 LIMIT $3[0m  [["user_id", 4], ["group_id", 8], ["LIMIT", 1]]
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "memberships" ("group_id", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["group_id", 8], ["user_id", 4], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mMembership Exists (0.3ms)[0m  [1m[34mSELECT  1 AS one FROM "memberships" WHERE "memberships"."user_id" = $1 AND "memberships"."group_id" = $2 LIMIT $3[0m  [["user_id", 5], ["group_id", 8], ["LIMIT", 1]]
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "memberships" ("group_id", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["group_id", 8], ["user_id", 5], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mMembership Exists (0.5ms)[0m  [1m[34mSELECT  1 AS one FROM "memberships" WHERE "memberships"."user_id" = $1 AND "memberships"."group_id" = $2 LIMIT $3[0m  [["user_id", 1], ["group_id", 9], ["LIMIT", 1]]
+  [1m[35mSQL (0.6ms)[0m  [1m[32mINSERT INTO "memberships" ("group_id", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["group_id", 9], ["user_id", 1], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mMembership Exists (0.4ms)[0m  [1m[34mSELECT  1 AS one FROM "memberships" WHERE "memberships"."user_id" = $1 AND "memberships"."group_id" = $2 LIMIT $3[0m  [["user_id", 2], ["group_id", 9], ["LIMIT", 1]]
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "memberships" ("group_id", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["group_id", 9], ["user_id", 2], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mMembership Exists (0.3ms)[0m  [1m[34mSELECT  1 AS one FROM "memberships" WHERE "memberships"."user_id" = $1 AND "memberships"."group_id" = $2 LIMIT $3[0m  [["user_id", 3], ["group_id", 9], ["LIMIT", 1]]
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "memberships" ("group_id", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["group_id", 9], ["user_id", 3], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mMembership Exists (0.3ms)[0m  [1m[34mSELECT  1 AS one FROM "memberships" WHERE "memberships"."user_id" = $1 AND "memberships"."group_id" = $2 LIMIT $3[0m  [["user_id", 4], ["group_id", 9], ["LIMIT", 1]]
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "memberships" ("group_id", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["group_id", 9], ["user_id", 4], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mMembership Exists (0.3ms)[0m  [1m[34mSELECT  1 AS one FROM "memberships" WHERE "memberships"."user_id" = $1 AND "memberships"."group_id" = $2 LIMIT $3[0m  [["user_id", 5], ["group_id", 9], ["LIMIT", 1]]
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "memberships" ("group_id", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["group_id", 9], ["user_id", 5], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mMembership Exists (0.3ms)[0m  [1m[34mSELECT  1 AS one FROM "memberships" WHERE "memberships"."user_id" = $1 AND "memberships"."group_id" = $2 LIMIT $3[0m  [["user_id", 1], ["group_id", 10], ["LIMIT", 1]]
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "memberships" ("group_id", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["group_id", 10], ["user_id", 1], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mMembership Exists (0.3ms)[0m  [1m[34mSELECT  1 AS one FROM "memberships" WHERE "memberships"."user_id" = $1 AND "memberships"."group_id" = $2 LIMIT $3[0m  [["user_id", 2], ["group_id", 10], ["LIMIT", 1]]
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "memberships" ("group_id", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["group_id", 10], ["user_id", 2], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mMembership Exists (0.3ms)[0m  [1m[34mSELECT  1 AS one FROM "memberships" WHERE "memberships"."user_id" = $1 AND "memberships"."group_id" = $2 LIMIT $3[0m  [["user_id", 3], ["group_id", 10], ["LIMIT", 1]]
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "memberships" ("group_id", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["group_id", 10], ["user_id", 3], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mMembership Exists (0.3ms)[0m  [1m[34mSELECT  1 AS one FROM "memberships" WHERE "memberships"."user_id" = $1 AND "memberships"."group_id" = $2 LIMIT $3[0m  [["user_id", 4], ["group_id", 10], ["LIMIT", 1]]
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "memberships" ("group_id", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["group_id", 10], ["user_id", 4], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mMembership Exists (0.3ms)[0m  [1m[34mSELECT  1 AS one FROM "memberships" WHERE "memberships"."user_id" = $1 AND "memberships"."group_id" = $2 LIMIT $3[0m  [["user_id", 5], ["group_id", 10], ["LIMIT", 1]]
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "memberships" ("group_id", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["group_id", 10], ["user_id", 5], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (1.5ms)[0m  [1m[32mINSERT INTO "events" ("name", "time", "course_id", "group_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["name", "Business Event"], ["time", 2016-11-25 19:45:26 UTC], ["course_id", 4], ["group_id", 1], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.6ms)[0m  [1m[32mINSERT INTO "events" ("name", "time", "course_id", "group_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["name", "World Challenge"], ["time", 2016-11-25 19:45:26 UTC], ["course_id", 3], ["group_id", 1], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.5ms)[0m  [1m[32mINSERT INTO "events" ("name", "time", "course_id", "group_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["name", "Song Open"], ["time", 2016-11-25 19:45:26 UTC], ["course_id", 1], ["group_id", 1], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.5ms)[0m  [1m[32mINSERT INTO "events" ("name", "time", "course_id", "group_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["name", "CareerBuilder"], ["time", 2016-11-25 19:45:26 UTC], ["course_id", 2], ["group_id", 1], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.9ms)[0m  [1m[32mINSERT INTO "events" ("name", "time", "course_id", "group_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["name", "PGA Tour"], ["time", 2016-11-25 19:45:26 UTC], ["course_id", 4], ["group_id", 2], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.5ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.5ms)[0m  [1m[32mINSERT INTO "events" ("name", "time", "course_id", "group_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["name", "Jr Championships"], ["time", 2016-11-25 19:45:26 UTC], ["course_id", 3], ["group_id", 2], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "events" ("name", "time", "course_id", "group_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["name", "Family Gathering"], ["time", 2016-11-25 19:45:26 UTC], ["course_id", 1], ["group_id", 2], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.5ms)[0m  [1m[32mINSERT INTO "events" ("name", "time", "course_id", "group_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["name", "Bachelor Party"], ["time", 2016-11-25 19:45:26 UTC], ["course_id", 2], ["group_id", 2], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "events" ("name", "time", "course_id", "group_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["name", "Welcome Event"], ["time", 2016-11-25 19:45:26 UTC], ["course_id", 4], ["group_id", 3], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "events" ("name", "time", "course_id", "group_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["name", "World Challenge"], ["time", 2016-11-25 19:45:26 UTC], ["course_id", 3], ["group_id", 3], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "events" ("name", "time", "course_id", "group_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["name", "Mount Vernons"], ["time", 2016-11-25 19:45:26 UTC], ["course_id", 1], ["group_id", 3], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "events" ("name", "time", "course_id", "group_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["name", "GA Gathering"], ["time", 2016-11-25 19:45:26 UTC], ["course_id", 2], ["group_id", 3], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "events" ("name", "time", "course_id", "group_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["name", "DC Meetup"], ["time", 2016-11-25 19:45:26 UTC], ["course_id", 4], ["group_id", 4], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "events" ("name", "time", "course_id", "group_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["name", "AOL Golfers"], ["time", 2016-11-25 19:45:26 UTC], ["course_id", 3], ["group_id", 4], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "events" ("name", "time", "course_id", "group_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["name", "Brad's Birthday"], ["time", 2016-11-25 19:45:26 UTC], ["course_id", 1], ["group_id", 4], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.5ms)[0m  [1m[32mINSERT INTO "events" ("name", "time", "course_id", "group_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["name", "Holiday"], ["time", 2016-11-25 19:45:26 UTC], ["course_id", 2], ["group_id", 4], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "events" ("name", "time", "course_id", "group_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["name", "Sec Business Event"], ["time", 2016-11-25 19:45:26 UTC], ["course_id", 4], ["group_id", 5], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "events" ("name", "time", "course_id", "group_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["name", "Jr Champs"], ["time", 2016-11-25 19:45:26 UTC], ["course_id", 3], ["group_id", 5], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "events" ("name", "time", "course_id", "group_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["name", "PGA Tour"], ["time", 2016-11-25 19:45:26 UTC], ["course_id", 1], ["group_id", 5], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "events" ("name", "time", "course_id", "group_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["name", "Eventbrite"], ["time", 2016-11-25 19:45:26 UTC], ["course_id", 2], ["group_id", 5], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "events" ("name", "time", "course_id", "group_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["name", "Meetups"], ["time", 2016-11-25 19:45:26 UTC], ["course_id", 4], ["group_id", 6], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "events" ("name", "time", "course_id", "group_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["name", "Community Event"], ["time", 2016-11-25 19:45:26 UTC], ["course_id", 3], ["group_id", 6], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "events" ("name", "time", "course_id", "group_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["name", "Cravens Family"], ["time", 2016-11-25 19:45:26 UTC], ["course_id", 1], ["group_id", 6], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "events" ("name", "time", "course_id", "group_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["name", "Bradley's Event"], ["time", 2016-11-25 19:45:26 UTC], ["course_id", 2], ["group_id", 6], ["created_at", 2016-11-25 19:45:26 UTC], ["updated_at", 2016-11-25 19:45:26 UTC]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (1.5ms)[0m  [1m[32mINSERT INTO "bets" ("amount", "hole_id", "course_id", "event_id") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["amount", 5], ["hole_id", 55], ["course_id", 4], ["event_id", 1]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.7ms)[0m  [1m[32mINSERT INTO "bets" ("amount", "hole_id", "course_id", "event_id") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["amount", 5], ["hole_id", 56], ["course_id", 4], ["event_id", 1]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.6ms)[0m  [1m[32mINSERT INTO "bets" ("amount", "hole_id", "course_id", "event_id") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["amount", 5], ["hole_id", 57], ["course_id", 4], ["event_id", 1]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.5ms)[0m  [1m[32mINSERT INTO "bets" ("amount", "hole_id", "course_id", "event_id") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["amount", 5], ["hole_id", 58], ["course_id", 4], ["event_id", 1]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.5ms)[0m  [1m[32mINSERT INTO "bets" ("amount", "hole_id", "course_id", "event_id") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["amount", 5], ["hole_id", 59], ["course_id", 4], ["event_id", 1]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.5ms)[0m  [1m[32mINSERT INTO "bets" ("amount", "hole_id", "course_id", "event_id") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["amount", 5], ["hole_id", 60], ["course_id", 4], ["event_id", 1]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "bets" ("amount", "hole_id", "course_id", "event_id") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["amount", 5], ["hole_id", 61], ["course_id", 4], ["event_id", 1]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "bets" ("amount", "hole_id", "course_id", "event_id") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["amount", 5], ["hole_id", 62], ["course_id", 4], ["event_id", 1]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "bets" ("amount", "hole_id", "course_id", "event_id") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["amount", 5], ["hole_id", 63], ["course_id", 4], ["event_id", 1]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "bets" ("amount", "hole_id", "course_id", "event_id") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["amount", 5], ["hole_id", 64], ["course_id", 4], ["event_id", 1]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "bets" ("amount", "hole_id", "course_id", "event_id") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["amount", 5], ["hole_id", 65], ["course_id", 4], ["event_id", 1]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "bets" ("amount", "hole_id", "course_id", "event_id") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["amount", 5], ["hole_id", 66], ["course_id", 4], ["event_id", 1]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "bets" ("amount", "hole_id", "course_id", "event_id") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["amount", 5], ["hole_id", 67], ["course_id", 4], ["event_id", 1]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "bets" ("amount", "hole_id", "course_id", "event_id") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["amount", 5], ["hole_id", 68], ["course_id", 4], ["event_id", 1]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "bets" ("amount", "hole_id", "course_id", "event_id") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["amount", 5], ["hole_id", 69], ["course_id", 4], ["event_id", 1]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "bets" ("amount", "hole_id", "course_id", "event_id") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["amount", 5], ["hole_id", 70], ["course_id", 4], ["event_id", 1]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "bets" ("amount", "hole_id", "course_id", "event_id") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["amount", 5], ["hole_id", 71], ["course_id", 4], ["event_id", 1]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "bets" ("amount", "hole_id", "course_id", "event_id") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["amount", 5], ["hole_id", 72], ["course_id", 4], ["event_id", 1]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "bets" ("amount", "hole_id", "course_id", "event_id") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["amount", 10], ["hole_id", 37], ["course_id", 3], ["event_id", 2]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "bets" ("amount", "hole_id", "course_id", "event_id") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["amount", 10], ["hole_id", 38], ["course_id", 3], ["event_id", 2]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "bets" ("amount", "hole_id", "course_id", "event_id") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["amount", 10], ["hole_id", 39], ["course_id", 3], ["event_id", 2]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "bets" ("amount", "hole_id", "course_id", "event_id") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["amount", 10], ["hole_id", 40], ["course_id", 3], ["event_id", 2]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "bets" ("amount", "hole_id", "course_id", "event_id") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["amount", 10], ["hole_id", 46], ["course_id", 3], ["event_id", 2]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "bets" ("amount", "hole_id", "course_id", "event_id") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["amount", 10], ["hole_id", 42], ["course_id", 3], ["event_id", 2]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.6ms)[0m  [1m[32mINSERT INTO "bets" ("amount", "hole_id", "course_id", "event_id") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["amount", 10], ["hole_id", 43], ["course_id", 3], ["event_id", 2]]
+  [1m[35m (0.5ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.6ms)[0m  [1m[32mINSERT INTO "bets" ("amount", "hole_id", "course_id", "event_id") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["amount", 10], ["hole_id", 44], ["course_id", 3], ["event_id", 2]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "bets" ("amount", "hole_id", "course_id", "event_id") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["amount", 10], ["hole_id", 45], ["course_id", 3], ["event_id", 2]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "bets" ("amount", "hole_id", "course_id", "event_id") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["amount", 10], ["hole_id", 46], ["course_id", 3], ["event_id", 2]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "bets" ("amount", "hole_id", "course_id", "event_id") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["amount", 10], ["hole_id", 47], ["course_id", 3], ["event_id", 2]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "bets" ("amount", "hole_id", "course_id", "event_id") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["amount", 10], ["hole_id", 48], ["course_id", 3], ["event_id", 2]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "bets" ("amount", "hole_id", "course_id", "event_id") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["amount", 10], ["hole_id", 49], ["course_id", 3], ["event_id", 2]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "bets" ("amount", "hole_id", "course_id", "event_id") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["amount", 10], ["hole_id", 50], ["course_id", 3], ["event_id", 2]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "bets" ("amount", "hole_id", "course_id", "event_id") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["amount", 10], ["hole_id", 51], ["course_id", 3], ["event_id", 2]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "bets" ("amount", "hole_id", "course_id", "event_id") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["amount", 10], ["hole_id", 52], ["course_id", 3], ["event_id", 2]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "bets" ("amount", "hole_id", "course_id", "event_id") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["amount", 10], ["hole_id", 53], ["course_id", 3], ["event_id", 2]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "bets" ("amount", "hole_id", "course_id", "event_id") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["amount", 10], ["hole_id", 54], ["course_id", 3], ["event_id", 2]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "bets" ("amount", "hole_id", "course_id", "event_id") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["amount", 5], ["hole_id", 1], ["course_id", 1], ["event_id", 3]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "bets" ("amount", "hole_id", "course_id", "event_id") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["amount", 5], ["hole_id", 2], ["course_id", 1], ["event_id", 3]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "bets" ("amount", "hole_id", "course_id", "event_id") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["amount", 5], ["hole_id", 3], ["course_id", 1], ["event_id", 3]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "bets" ("amount", "hole_id", "course_id", "event_id") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["amount", 5], ["hole_id", 4], ["course_id", 1], ["event_id", 3]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "bets" ("amount", "hole_id", "course_id", "event_id") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["amount", 5], ["hole_id", 5], ["course_id", 1], ["event_id", 3]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "bets" ("amount", "hole_id", "course_id", "event_id") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["amount", 5], ["hole_id", 6], ["course_id", 1], ["event_id", 3]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "bets" ("amount", "hole_id", "course_id", "event_id") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["amount", 5], ["hole_id", 7], ["course_id", 1], ["event_id", 3]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "bets" ("amount", "hole_id", "course_id", "event_id") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["amount", 5], ["hole_id", 8], ["course_id", 1], ["event_id", 3]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "bets" ("amount", "hole_id", "course_id", "event_id") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["amount", 5], ["hole_id", 9], ["course_id", 1], ["event_id", 3]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "bets" ("amount", "hole_id", "course_id", "event_id") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["amount", 5], ["hole_id", 10], ["course_id", 1], ["event_id", 3]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "bets" ("amount", "hole_id", "course_id", "event_id") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["amount", 5], ["hole_id", 11], ["course_id", 1], ["event_id", 3]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "bets" ("amount", "hole_id", "course_id", "event_id") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["amount", 5], ["hole_id", 12], ["course_id", 1], ["event_id", 3]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "bets" ("amount", "hole_id", "course_id", "event_id") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["amount", 5], ["hole_id", 13], ["course_id", 1], ["event_id", 3]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "bets" ("amount", "hole_id", "course_id", "event_id") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["amount", 5], ["hole_id", 14], ["course_id", 1], ["event_id", 3]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "bets" ("amount", "hole_id", "course_id", "event_id") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["amount", 5], ["hole_id", 15], ["course_id", 1], ["event_id", 3]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (1.4ms)[0m  [1m[32mINSERT INTO "bets" ("amount", "hole_id", "course_id", "event_id") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["amount", 5], ["hole_id", 16], ["course_id", 1], ["event_id", 3]]
+  [1m[35m (1.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "bets" ("amount", "hole_id", "course_id", "event_id") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["amount", 5], ["hole_id", 17], ["course_id", 1], ["event_id", 3]]
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "bets" ("amount", "hole_id", "course_id", "event_id") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["amount", 5], ["hole_id", 18], ["course_id", 1], ["event_id", 3]]
+  [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+Started GET "/" for ::1 at 2016-11-25 14:46:11 -0500
+  [1m[36mActiveRecord::SchemaMigration Load (0.5ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Processing by CoursesController#index as HTML
+  Rendering courses/index.html.erb within layouts/application
+  [1m[36mCourse Load (0.6ms)[0m  [1m[34mSELECT "courses".* FROM "courses"[0m
+  Rendered courses/index.html.erb within layouts/application (24.3ms)
+Completed 200 OK in 525ms (Views: 493.0ms | ActiveRecord: 5.9ms)
+
+
+Started GET "/courses/4" for ::1 at 2016-11-25 14:46:16 -0500
+Processing by CoursesController#show as HTML
+  Parameters: {"id"=>"4"}
+  [1m[36mCourse Load (0.4ms)[0m  [1m[34mSELECT  "courses".* FROM "courses" WHERE "courses"."id" = $1 LIMIT $2[0m  [["id", 4], ["LIMIT", 1]]
+  Rendering courses/show.html.erb within layouts/application
+  [1m[35m (0.7ms)[0m  [1m[34mSELECT COUNT(*) FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 4]]
+  [1m[36mHole Load (0.3ms)[0m  [1m[34mSELECT "holes".* FROM "holes" WHERE "holes"."course_id" = $1[0m  [["course_id", 4]]
+  Rendered courses/show.html.erb within layouts/application (40.8ms)
+  [1m[36mCourse Load (0.3ms)[0m  [1m[34mSELECT "courses".* FROM "courses"[0m
+Completed 200 OK in 80ms (Views: 54.0ms | ActiveRecord: 7.7ms)
+
+
+Started GET "/holes/55" for ::1 at 2016-11-25 14:46:24 -0500
+Processing by HolesController#show as HTML
+  Parameters: {"id"=>"55"}
+  [1m[36mHole Load (1.1ms)[0m  [1m[34mSELECT  "holes".* FROM "holes" WHERE "holes"."id" = $1 LIMIT $2[0m  [["id", 55], ["LIMIT", 1]]
+  Rendering holes/show.html.erb within layouts/application
+  [1m[36mCourse Load (0.5ms)[0m  [1m[34mSELECT  "courses".* FROM "courses" WHERE "courses"."id" = $1 LIMIT $2[0m  [["id", 4], ["LIMIT", 1]]
+  Rendered holes/show.html.erb within layouts/application (3.8ms)
+  [1m[36mCourse Load (0.3ms)[0m  [1m[34mSELECT "courses".* FROM "courses"[0m
+Completed 200 OK in 41ms (Views: 33.5ms | ActiveRecord: 2.0ms)
+
+
+Started GET "/courses" for ::1 at 2016-11-25 14:46:27 -0500
+Processing by CoursesController#index as HTML
+  Rendering courses/index.html.erb within layouts/application
+  [1m[36mCourse Load (0.5ms)[0m  [1m[34mSELECT "courses".* FROM "courses"[0m
+  Rendered courses/index.html.erb within layouts/application (4.2ms)
+Completed 200 OK in 49ms (Views: 37.8ms | ActiveRecord: 0.5ms)
+
+
+Started GET "/groups" for ::1 at 2016-11-25 14:46:36 -0500
+Processing by GroupsController#index as HTML
+  Rendering groups/index.html.erb within layouts/application
+  [1m[36mGroup Load (1.8ms)[0m  [1m[34mSELECT "groups".* FROM "groups"[0m
+  [1m[35m (0.5ms)[0m  [1m[34mSELECT COUNT(*) FROM "memberships" WHERE "memberships"."group_id" = $1[0m  [["group_id", 1]]
+  [1m[35m (0.6ms)[0m  [1m[34mSELECT COUNT(*) FROM "events" WHERE "events"."group_id" = $1[0m  [["group_id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "events" WHERE "events"."group_id" = $1[0m  [["group_id", 1]]
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT COUNT(*) FROM "memberships" WHERE "memberships"."group_id" = $1[0m  [["group_id", 2]]
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT COUNT(*) FROM "events" WHERE "events"."group_id" = $1[0m  [["group_id", 2]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "events" WHERE "events"."group_id" = $1[0m  [["group_id", 2]]
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "memberships" WHERE "memberships"."group_id" = $1[0m  [["group_id", 3]]
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "events" WHERE "events"."group_id" = $1[0m  [["group_id", 3]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "events" WHERE "events"."group_id" = $1[0m  [["group_id", 3]]
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "memberships" WHERE "memberships"."group_id" = $1[0m  [["group_id", 4]]
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "events" WHERE "events"."group_id" = $1[0m  [["group_id", 4]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "events" WHERE "events"."group_id" = $1[0m  [["group_id", 4]]
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT COUNT(*) FROM "memberships" WHERE "memberships"."group_id" = $1[0m  [["group_id", 5]]
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "events" WHERE "events"."group_id" = $1[0m  [["group_id", 5]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "events" WHERE "events"."group_id" = $1[0m  [["group_id", 5]]
+  [1m[35m (0.5ms)[0m  [1m[34mSELECT COUNT(*) FROM "memberships" WHERE "memberships"."group_id" = $1[0m  [["group_id", 6]]
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT COUNT(*) FROM "events" WHERE "events"."group_id" = $1[0m  [["group_id", 6]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "events" WHERE "events"."group_id" = $1[0m  [["group_id", 6]]
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT COUNT(*) FROM "memberships" WHERE "memberships"."group_id" = $1[0m  [["group_id", 7]]
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "events" WHERE "events"."group_id" = $1[0m  [["group_id", 7]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "events" WHERE "events"."group_id" = $1[0m  [["group_id", 7]]
+  [1m[35m (0.5ms)[0m  [1m[34mSELECT COUNT(*) FROM "memberships" WHERE "memberships"."group_id" = $1[0m  [["group_id", 8]]
+  [1m[35m (1.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "events" WHERE "events"."group_id" = $1[0m  [["group_id", 8]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "events" WHERE "events"."group_id" = $1[0m  [["group_id", 8]]
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT COUNT(*) FROM "memberships" WHERE "memberships"."group_id" = $1[0m  [["group_id", 9]]
+  [1m[35m (0.5ms)[0m  [1m[34mSELECT COUNT(*) FROM "events" WHERE "events"."group_id" = $1[0m  [["group_id", 9]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "events" WHERE "events"."group_id" = $1[0m  [["group_id", 9]]
+  [1m[35m (0.5ms)[0m  [1m[34mSELECT COUNT(*) FROM "memberships" WHERE "memberships"."group_id" = $1[0m  [["group_id", 10]]
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT COUNT(*) FROM "events" WHERE "events"."group_id" = $1[0m  [["group_id", 10]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "events" WHERE "events"."group_id" = $1[0m  [["group_id", 10]]
+  [1m[35m (0.5ms)[0m  [1m[34mSELECT COUNT(*) FROM "memberships" WHERE "memberships"."group_id" = $1[0m  [["group_id", 11]]
+  [1m[35m (1.4ms)[0m  [1m[34mSELECT COUNT(*) FROM "events" WHERE "events"."group_id" = $1[0m  [["group_id", 11]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "events" WHERE "events"."group_id" = $1[0m  [["group_id", 11]]
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT COUNT(*) FROM "memberships" WHERE "memberships"."group_id" = $1[0m  [["group_id", 12]]
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT COUNT(*) FROM "events" WHERE "events"."group_id" = $1[0m  [["group_id", 12]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "events" WHERE "events"."group_id" = $1[0m  [["group_id", 12]]
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "memberships" WHERE "memberships"."group_id" = $1[0m  [["group_id", 13]]
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "events" WHERE "events"."group_id" = $1[0m  [["group_id", 13]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "events" WHERE "events"."group_id" = $1[0m  [["group_id", 13]]
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT COUNT(*) FROM "memberships" WHERE "memberships"."group_id" = $1[0m  [["group_id", 14]]
+  [1m[35m (0.9ms)[0m  [1m[34mSELECT COUNT(*) FROM "events" WHERE "events"."group_id" = $1[0m  [["group_id", 14]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "events" WHERE "events"."group_id" = $1[0m  [["group_id", 14]]
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT COUNT(*) FROM "memberships" WHERE "memberships"."group_id" = $1[0m  [["group_id", 15]]
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "events" WHERE "events"."group_id" = $1[0m  [["group_id", 15]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "events" WHERE "events"."group_id" = $1[0m  [["group_id", 15]]
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "memberships" WHERE "memberships"."group_id" = $1[0m  [["group_id", 16]]
+  [1m[35m (0.5ms)[0m  [1m[34mSELECT COUNT(*) FROM "events" WHERE "events"."group_id" = $1[0m  [["group_id", 16]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "events" WHERE "events"."group_id" = $1[0m  [["group_id", 16]]
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT COUNT(*) FROM "memberships" WHERE "memberships"."group_id" = $1[0m  [["group_id", 17]]
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT COUNT(*) FROM "events" WHERE "events"."group_id" = $1[0m  [["group_id", 17]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "events" WHERE "events"."group_id" = $1[0m  [["group_id", 17]]
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "memberships" WHERE "memberships"."group_id" = $1[0m  [["group_id", 18]]
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT COUNT(*) FROM "events" WHERE "events"."group_id" = $1[0m  [["group_id", 18]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "events" WHERE "events"."group_id" = $1[0m  [["group_id", 18]]
+  [1m[35m (0.5ms)[0m  [1m[34mSELECT COUNT(*) FROM "memberships" WHERE "memberships"."group_id" = $1[0m  [["group_id", 19]]
+  [1m[35m (0.5ms)[0m  [1m[34mSELECT COUNT(*) FROM "events" WHERE "events"."group_id" = $1[0m  [["group_id", 19]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "events" WHERE "events"."group_id" = $1[0m  [["group_id", 19]]
+  [1m[35m (0.8ms)[0m  [1m[34mSELECT COUNT(*) FROM "memberships" WHERE "memberships"."group_id" = $1[0m  [["group_id", 20]]
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT COUNT(*) FROM "events" WHERE "events"."group_id" = $1[0m  [["group_id", 20]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "events" WHERE "events"."group_id" = $1[0m  [["group_id", 20]]
+  [1m[35m (0.6ms)[0m  [1m[34mSELECT COUNT(*) FROM "memberships" WHERE "memberships"."group_id" = $1[0m  [["group_id", 21]]
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT COUNT(*) FROM "events" WHERE "events"."group_id" = $1[0m  [["group_id", 21]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "events" WHERE "events"."group_id" = $1[0m  [["group_id", 21]]
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT COUNT(*) FROM "memberships" WHERE "memberships"."group_id" = $1[0m  [["group_id", 22]]
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "events" WHERE "events"."group_id" = $1[0m  [["group_id", 22]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "events" WHERE "events"."group_id" = $1[0m  [["group_id", 22]]
+  [1m[35m (1.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "memberships" WHERE "memberships"."group_id" = $1[0m  [["group_id", 23]]
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT COUNT(*) FROM "events" WHERE "events"."group_id" = $1[0m  [["group_id", 23]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "events" WHERE "events"."group_id" = $1[0m  [["group_id", 23]]
+  [1m[35m (0.5ms)[0m  [1m[34mSELECT COUNT(*) FROM "memberships" WHERE "memberships"."group_id" = $1[0m  [["group_id", 24]]
+  [1m[35m (1.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "events" WHERE "events"."group_id" = $1[0m  [["group_id", 24]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "events" WHERE "events"."group_id" = $1[0m  [["group_id", 24]]
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT COUNT(*) FROM "memberships" WHERE "memberships"."group_id" = $1[0m  [["group_id", 25]]
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "events" WHERE "events"."group_id" = $1[0m  [["group_id", 25]]
+  [1m[36mCACHE (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "events" WHERE "events"."group_id" = $1[0m  [["group_id", 25]]
+  Rendered groups/index.html.erb within layouts/application (192.2ms)
+  [1m[36mCourse Load (0.3ms)[0m  [1m[34mSELECT "courses".* FROM "courses"[0m
+Completed 200 OK in 228ms (Views: 179.8ms | ActiveRecord: 36.1ms)
+
+
+Started GET "/courses/new" for ::1 at 2016-11-25 14:46:40 -0500
+Processing by CoursesController#new as HTML
+Redirected to http://localhost:3000/courses
+Completed 302 Found in 2ms (ActiveRecord: 0.0ms)
+
+
+Started GET "/courses" for ::1 at 2016-11-25 14:46:40 -0500
+Processing by CoursesController#index as HTML
+  Rendering courses/index.html.erb within layouts/application
+  [1m[36mCourse Load (0.3ms)[0m  [1m[34mSELECT "courses".* FROM "courses"[0m
+  Rendered courses/index.html.erb within layouts/application (2.7ms)
+Completed 200 OK in 50ms (Views: 38.6ms | ActiveRecord: 0.3ms)
+
+
+Started GET "/courses" for ::1 at 2016-11-25 14:46:45 -0500
+Processing by CoursesController#index as HTML
+  Rendering courses/index.html.erb within layouts/application
+  [1m[36mCourse Load (0.4ms)[0m  [1m[34mSELECT "courses".* FROM "courses"[0m
+  Rendered courses/index.html.erb within layouts/application (2.5ms)
+Completed 200 OK in 35ms (Views: 31.6ms | ActiveRecord: 0.4ms)
+
+

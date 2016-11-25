@@ -6,6 +6,7 @@ Rails.application.routes.draw do
     resources :holes
   end
 
+  # what resources do you need for memberships under groups that you also need for users, Is there a way to consolidate?
   resources :groups do
     resources :memberships
     resources :events

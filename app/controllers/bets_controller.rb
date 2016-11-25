@@ -8,6 +8,7 @@ class BetsController < ApplicationController
     @bet = Bet.find(params[:id])
   end
 
+# this top line is repeated 5 times, consider using a before_action for this redirection
   def new
     redirect_to root_path unless @current_user
     @event = Event.find(params[:event_id])

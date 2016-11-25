@@ -17,6 +17,7 @@ ActiveRecord::Schema.define(version: 20161112160924) do
 
   create_table "bets", force: :cascade do |t|
     t.integer "amount"
+    # do you need course id? seems like you could get that from the hole
     t.integer "hole_id"
     t.integer "course_id"
     t.integer "event_id"
@@ -31,7 +32,9 @@ ActiveRecord::Schema.define(version: 20161112160924) do
     t.string   "img_url"
     t.string   "name"
     t.string   "location"
+    # this feels like a duplication of data, couldn't you get num_holes by course.holes.length
     t.integer  "num_holes"
+    # this could be lack of knowledge on my part, isn't par specific to a hole? If its not, seems like something you can aggregate from holes. That way if a holes par changes, so does the course, by virtue of the domain model.
     t.integer  "par"
     t.integer  "yardage"
     t.integer  "rating"

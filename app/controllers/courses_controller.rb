@@ -1,4 +1,9 @@
 class CoursesController < ApplicationController
+  before_action :check_if_user, except: [:index, :show]
+
+  def check_if_user
+    redirect_to new_user_path unless @current_user
+  end
 
   def index
     @courses = Course.all
@@ -9,30 +14,25 @@ class CoursesController < ApplicationController
   end
 
   def new
-    redirect_to courses_path unless @current_user
     @course = Course.new
   end
 
   def create
-    redirect_to root_path unless @current_user
     @course = Course.create!(course_params)
     redirect_to @course
   end
 
   def edit
-    redirect_to root_path unless @current_user
     @course = Course.find(params[:id])
   end
 
   def update
-    redirect_to root_path unless @current_user
     @course = Course.find(params[:id])
     @course.update(course_params)
     redirect_to @course
   end
 
   def destroy
-    redirect_to root_path unless @current_user
     @course = Course.find(params[:id])
     @course.destroy
     redirect_to courses_path

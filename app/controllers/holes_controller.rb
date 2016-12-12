@@ -1,17 +1,20 @@
 class HolesController < ApplicationController
+  before_action :check_if_user, except: [:index, :show]
+
+  def check_if_user
+    redirect_to new_user_path unless @current_user
+  end
 
   def index
     @holes = Hole.all
   end
 
   def new
-    redirect_to root_path unless @current_user
     @course = Course.find(params[:course_id])
     @hole = @course.holes.new
   end
 
   def create
-    redirect_to root_path unless @current_user
     @course = Course.find(params[:course_id])
     @hole = @course.holes.create(hole_params)
     redirect_to @hole
@@ -22,19 +25,16 @@ class HolesController < ApplicationController
   end
 
   def edit
-    redirect_to root_path unless @current_user
     @hole = Hole.find(params[:id])
   end
 
   def update
-    redirect_to root_path unless @current_user
     @hole = Hole.find(params[:id])
     @hole.update(hole_params)
     redirect_to @hole
   end
 
   def destroy
-    redirect_to root_path unless @current_user
     @hole = Hole.find(params[:id])
     @hole.destroy
     redirect_to courses_path

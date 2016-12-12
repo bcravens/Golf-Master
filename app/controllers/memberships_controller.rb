@@ -5,9 +5,10 @@ class MembershipsController < ApplicationController
   end
 
   def new
-    puts "****************************"
-    puts @current_user.inspect
-    redirect_to root_path unless @current_user
+    if @current_user.nil?
+      redirect_to new_user_path
+      return
+    end
     @group = Group.find(params[:group_id])
     if Membership.exists?(user_id: @current_user.id, group_id: @group.id)
       flash[:alert] = "You are already in this group!"

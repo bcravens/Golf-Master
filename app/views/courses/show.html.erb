@@ -1,5 +1,5 @@
 <h2><%= @course.name %> Golf Course</h2>
-<h3><%= link_to("Edit This Course", edit_course_path(@course)) if @current_user %> | <%= link_to("Add a Hole", new_course_hole_path(@course)) if @current_user %></h3>
+<h3><%= link_to "Edit This Course", edit_course_path(@course) %> | <%= link_to "Add a Hole", new_course_hole_path(@course) %></h3>
 <h3><%= @course.location %></h3>
 <%= image_tag @course.img_url, class: "course_img" %>
 

@@ -1,4 +1,9 @@
 class BetsController < ApplicationController
+  before_action :check_if_user, except: [:index, :show]
+
+  def check_if_user
+    redirect_to new_user_path unless @current_user
+  end
 
   def index
     @bets = Bet.all
@@ -9,27 +14,23 @@ class BetsController < ApplicationController
   end
 
   def new
-    redirect_to root_path unless @current_user
     @event = Event.find(params[:event_id])
     @hole = @event.course.holes.all.map{|h| [h.hole_num, h.id]}
     @bet = @event.bets.new
   end
 
   def create
-    redirect_to root_path unless @current_user
     @event = Event.find(params[:event_id])
     @bets = @event.bets.create!(bet_params)
     redirect_to @event
   end
 
   def edit
-    redirect_to root_path unless @current_user
     @event = Event.find(params[:event_id])
     @bet = Bet.find(params[:id])
   end
 
   def update
-    redirect_to root_path unless @current_user
     @event = Event.find(params[:event_id])
     @bet = Bet.find(params[:id])
     @bet.update(bet_params)
@@ -37,7 +38,6 @@ class BetsController < ApplicationController
   end
 
   def destroy
-    redirect_to root_path unless @current_user
     @bet = Bet.find(params[:id])
     @bet.destroy
     redirect_to courses_path
